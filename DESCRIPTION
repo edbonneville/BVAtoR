@@ -6,12 +6,13 @@ Author: Edouard F. Bonneville
 Maintainer: Edouard F. Bonneville <e.f.bonneville@lumc.nl>
 Description: Import EEG data from Brain Vision Analyzer (BVA) into R. 
     Does not require use of knowledge of MATLAB.
-Depends: R (>= 3.6.0)
+Depends: 
+    R (>= 3.6.0),
+    tidyverse (>= 1.2.8)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-    tidyverse,
     data.table,
     pbapply
 RoxygenNote: 7.0.1

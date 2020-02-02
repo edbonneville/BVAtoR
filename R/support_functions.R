@@ -49,8 +49,6 @@ get_voltages <- function(filename,
   #' @param samp_freq_Hz Sampling frequency in Hz.
   #' @param full_window_bounds Bounds of time window is ms e.g. c(-200, 1198).
   #' @importFrom magrittr %>%
-  #' @import tidyverse
-  #' @import stringr
   #' @return Formatted voltage dataframe.
   #'
   #' @export
@@ -87,8 +85,6 @@ get_markers <- function(filename,
   #' @param var_labs Variable labels to assign to filename
   #' parts separated by underscores e.g. c("subject", "condition").
   #' @importFrom magrittr %>%
-  #' @import tidyverse
-  #' @import stringr
   #' @return Formatted marker dataframe.
   #'
   #' @export
@@ -146,7 +142,6 @@ append_times_ERP <- function(voltage_dat,
   #' @param samp_freq_Hz Sampling frequency in Hz.
   #' @param full_window_bounds Bounds of time window is ms e.g. c(-200, 1198).
   #' @importFrom magrittr %>%
-  #' @import tidyverse
   #' @import data.table
   #' @return Voltage with ERPs appropriately appendended (dataframe).
   #'
@@ -179,7 +174,6 @@ ERP_to_times <- function(ERP_list, t) {
   #' @param ERP_list List of ERP components and their lower/upper bounds.
   #' @param t Vector of times.
   #' @importFrom magrittr %>%
-  #' @import tidyverse
   #' @return Dataframe with ERP and times.
   #'
   #' @export
