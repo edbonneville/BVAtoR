@@ -95,7 +95,7 @@ get_markers <- function(filename,
   triggers <- read.csv(filename, sep = "\n") %>%
 
     # rename single column as 'main'
-    rename(main = names(.)) %>%
+    dplyr::rename(main = names(.)) %>%
 
     # Subset marker lines, ^ means at beginning
     filter(str_detect(main, "^Mk")) %>%
