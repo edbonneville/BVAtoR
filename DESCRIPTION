@@ -8,7 +8,7 @@ Description: Import EEG data from Brain Vision Analyzer (BVA) into R.
     Does not require use of knowledge of MATLAB.
 Depends: 
     R (>= 3.6.0),
-    tidyverse (>= 1.2.8)
+    tidyverse (>= 1.3.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
