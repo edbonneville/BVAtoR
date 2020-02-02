@@ -27,6 +27,8 @@ BVA_to_R <- function(path, # path to folder with .vmrk files
   #' @import tidyverse
   #' @import data.table
   #' @return Formatted dataframe.
+  #'
+  #' @export
 
   cat("Converting .vmrks to .csv ... \n")
 

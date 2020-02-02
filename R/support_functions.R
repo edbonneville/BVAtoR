@@ -17,6 +17,8 @@ change_file_endings <- function(path,
   #' @return Nothing in console, but files will be renamed.
   #' @examples
   #' change_file_endings("project_files/", ".vmrk", ".csv")
+  #'
+  #' @export
 
   # Get character vector of all file names
   old_files <- list.files(path = path,
@@ -49,6 +51,8 @@ get_voltages <- function(filename,
   #' @importFrom magrittr %>%
   #' @import tidyverse
   #' @return Formatted voltage dataframe.
+  #'
+  #' @export
 
   dat_vol <- read.table(filename,
                         sep = ";", header = T)
@@ -84,6 +88,8 @@ get_markers <- function(filename,
   #' @importFrom magrittr %>%
   #' @import tidyverse
   #' @return Formatted marker dataframe.
+  #'
+  #' @export
 
   # Get triggers
   triggers <- read.csv(filename, sep = "\n") %>%
@@ -141,6 +147,8 @@ append_times_ERP <- function(voltage_dat,
   #' @import tidyverse
   #' @import data.table
   #' @return Voltage with ERPs appropriately appendended (dataframe).
+  #'
+  #' @export
 
   sample_step <- 1000 / samp_freq_Hz
 
@@ -171,6 +179,8 @@ ERP_to_times <- function(ERP_list, t) {
   #' @importFrom magrittr %>%
   #' @import tidyverse
   #' @return Dataframe with ERP and times.
+  #'
+  #' @export
 
   # Collapse list
   ERP_dat <- as.data.frame(do.call(rbind, ERP))
