@@ -11,6 +11,23 @@ BVA_to_R <- function(path, # path to folder with .vmrk files
                      full_window_bounds,
                      filename_returned = NULL) {
 
+  #' Pipeline from BVA exports to R dataframe.
+  #'
+  #' @description Take BVA exports and return large csv file
+  #' with eveyrthing summarised.
+  #' @param path Full path to all .vmrk and .dat files.
+  #' @param ERP List of ERP components and their lower/upper bounds.
+  #' @param var_labs Variable labels to assign to filename
+  #' parts separated by underscores e.g. c("subject", "condition").
+  #' @param samp_freq_Hz Sampling frequency in Hz.
+  #' @param full_window_bounds Bounds of time window is ms e.g. c(-200, 1198).
+  #' @param filename_returned "filename.csv" if you want a .csv returned/
+  #' @importFrom magrittr %>%
+  #' @importFrom  pbapply pblapply
+  #' @import tidyverse
+  #' @import data.table
+  #' @return Formatted dataframe.
+
   cat("Converting .vmrks to .csv ... \n")
 
   # First convert .vmrk files - make a check here
