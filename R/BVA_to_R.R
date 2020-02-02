@@ -26,6 +26,7 @@ BVA_to_R <- function(path, # path to folder with .vmrk files
   #' @importFrom  pbapply pblapply
   #' @import tidyverse
   #' @import data.table
+  #' @import stringr
   #' @return Formatted dataframe.
   #'
   #' @export

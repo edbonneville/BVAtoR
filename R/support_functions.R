@@ -50,6 +50,7 @@ get_voltages <- function(filename,
   #' @param full_window_bounds Bounds of time window is ms e.g. c(-200, 1198).
   #' @importFrom magrittr %>%
   #' @import tidyverse
+  #' @import stringr
   #' @return Formatted voltage dataframe.
   #'
   #' @export
@@ -87,6 +88,7 @@ get_markers <- function(filename,
   #' parts separated by underscores e.g. c("subject", "condition").
   #' @importFrom magrittr %>%
   #' @import tidyverse
+  #' @import stringr
   #' @return Formatted marker dataframe.
   #'
   #' @export
