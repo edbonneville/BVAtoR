@@ -64,7 +64,7 @@ get_voltages <- function(filename,
   obj_datapoints <- cbind.data.frame(dat_vol, name_split) %>%
     mutate(posit_datapoints = 1:n())
 
-  obj <- append_times_ERP(voltage_file = obj_datapoints,
+  obj <- append_times_ERP(voltage_dat = obj_datapoints,
                           ERP = ERP,
                           samp_freq_Hz = samp_freq_Hz,
                           full_window_bounds = full_window_bounds)
