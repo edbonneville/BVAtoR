@@ -1,0 +1,118 @@
+Brain Vision Data Exchange Marker File, Version 2.0
+; Data created from history path: kons104_comp/Raw Data/New Reference_TP9_TP10/Linear Derivation_combine_EXG1_EXG2_HEOG/Filters_0.1-30Hz_24oct/Edit Response Markers/Edit Markers/Edit Markers_final/OcularCorrection/Raw Data Inspection_Criteria_Set/Segmentation_122-149_known_correct_nobads/BaselineCorrection_noncogn_congr_nonviol
+; The channel numbers are related to the channels in the exported file.
+
+[Common Infos]
+Codepage=UTF-8
+DataFile=kons104_comp_BaselineCorrection_noncogn_congr_nonviol.dat
+
+[Marker Infos]
+; Each entry: Mk<Marker number>=<Type>,<Description>,<Position in data points>,
+; <Size in data points>, <Channel number (0 = marker is related to all channels)>,
+; <Date (YYYYMMDDhhmmssuuuuuu)>, Visible
+; Fields are delimited by commas, some fields may be omitted (empty).
+; Commas in type or description text are coded as "\1".
+Mk1=New Segment,,1,1,0,20190430131500455525
+Mk2=Stimulus,S129,101,1,0
+Mk3=Time 0,,101,1,0
+Mk4=Stimulus,R240,620,1,0
+Mk5=New Segment,,701,1,0,20190430131837471525
+Mk6=Stimulus,S147,801,1,0
+Mk7=Time 0,,801,1,0
+Mk8=Stimulus,R240,1041,1,0
+Mk9=New Segment,,1401,1,0,20190430131927527525
+Mk10=Stimulus,S144,1501,1,0
+Mk11=Time 0,,1501,1,0
+Mk12=Stimulus,R240,1731,1,0
+Mk13=New Segment,,2101,1,0,20190430131950755525
+Mk14=Stimulus,S146,2201,1,0
+Mk15=Time 0,,2201,1,0
+Mk16=Stimulus,R240,2416,1,0
+Mk17=New Segment,,2801,1,0,20190430132008357525
+Mk18=Time 0,,2901,1,0
+Mk19=Stimulus,S130,2901,1,0
+Mk20=Stimulus,R240,3183,1,0
+Mk21=New Segment,,3501,1,0,20190430132019713525
+Mk22=Time 0,,3601,1,0
+Mk23=Stimulus,S142,3601,1,0
+Mk24=Stimulus,R240,3793,1,0
+Mk25=New Segment,,4201,1,0,20190430132149811525
+Mk26=Time 0,,4301,1,0
+Mk27=Stimulus,S124,4301,1,0
+Mk28=Stimulus,R240,4512,1,0
+Mk29=New Segment,,4901,1,0,20190430132312261525
+Mk30=Stimulus,S137,5001,1,0
+Mk31=Time 0,,5001,1,0
+Mk32=Stimulus,R240,5237,1,0
+Mk33=New Segment,,5601,1,0,20190430132409871525
+Mk34=Time 0,,5701,1,0
+Mk35=Stimulus,S141,5701,1,0
+Mk36=Stimulus,R240,5930,1,0
+Mk37=New Segment,,6301,1,0,20190430132420661525
+Mk38=Time 0,,6401,1,0
+Mk39=Stimulus,S143,6401,1,0
+Mk40=Stimulus,R240,6622,1,0
+Mk41=New Segment,,7001,1,0,20190430132501751525
+Mk42=Stimulus,S139,7101,1,0
+Mk43=Time 0,,7101,1,0
+Mk44=Stimulus,R240,7344,1,0
+Mk45=New Segment,,7701,1,0,20190430132732755525
+Mk46=Time 0,,7801,1,0
+Mk47=Stimulus,S122,7801,1,0
+Mk48=Stimulus,R240,8053,1,0
+Mk49=New Segment,,8401,1,0,20190430132755525525
+Mk50=Time 0,,8501,1,0
+Mk51=Stimulus,S136,8501,1,0
+Mk52=Stimulus,R240,8711,1,0
+Mk53=New Segment,,9101,1,0,20190430132801513525
+Mk54=Time 0,,9201,1,0
+Mk55=Stimulus,S140,9201,1,0
+Mk56=Stimulus,R240,9461,1,0
+Mk57=New Segment,,9801,1,0,20190430132900783525
+Mk58=Time 0,,9901,1,0
+Mk59=Stimulus,S128,9901,1,0
+Mk60=Stimulus,R240,10140,1,0
+Mk61=New Segment,,10501,1,0,20190430132917891525
+Mk62=Time 0,,10601,1,0
+Mk63=Stimulus,S138,10601,1,0
+Mk64=Stimulus,R240,10902,1,0
+Mk65=New Segment,,11201,1,0,20190430133003971525
+Mk66=Time 0,,11301,1,0
+Mk67=Stimulus,S126,11301,1,0
+Mk68=Stimulus,R240,11596,1,0
+Mk69=New Segment,,11901,1,0,20190430133033447525
+Mk70=Time 0,,12001,1,0
+Mk71=Stimulus,S149,12001,1,0
+Mk72=Stimulus,R240,12213,1,0
+Mk73=New Segment,,12601,1,0,20190430133039095525
+Mk74=Stimulus,S145,12701,1,0
+Mk75=Time 0,,12701,1,0
+Mk76=Stimulus,R240,13009,1,0
+Mk77=New Segment,,13301,1,0,20190430133138517525
+Mk78=Time 0,,13401,1,0
+Mk79=Stimulus,S133,13401,1,0
+Mk80=Stimulus,R240,13616,1,0
+Mk81=New Segment,,14001,1,0,20190430133358377525
+Mk82=Stimulus,S148,14101,1,0
+Mk83=Time 0,,14101,1,0
+Mk84=Stimulus,R240,14329,1,0
+Mk85=New Segment,,14701,1,0,20190430133514061525
+Mk86=Stimulus,S135,14801,1,0
+Mk87=Time 0,,14801,1,0
+Mk88=Stimulus,R240,15049,1,0
+Mk89=New Segment,,15401,1,0,20190430133519687525
+Mk90=Time 0,,15501,1,0
+Mk91=Stimulus,S131,15501,1,0
+Mk92=Stimulus,R240,15755,1,0
+Mk93=New Segment,,16101,1,0,20190430133649185525
+Mk94=Stimulus,S125,16201,1,0
+Mk95=Time 0,,16201,1,0
+Mk96=Stimulus,R240,16399,1,0
+
+[Marker User Infos]
+; Each entry: Prop<Number>=Mk<Marker number>,<Type>,<Name>,<Value>,<Value2>,...,<ValueN>
+; Property number must be unique. Types can be int, single, string, bool, byte, double, uint
+; or arrays of those, indicated int-array etc
+; Array types have more than one value, number of values determines size of array.
+; Fields are delimited by commas, commas in strings are written \1
+; Properties are assigned to markers using their marker number.
