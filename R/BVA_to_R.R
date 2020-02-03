@@ -25,6 +25,10 @@ BVA_to_R <- function(path, # path to folder with .vmrk files
   #' @importFrom magrittr %>%
   #' @importFrom  pbapply pblapply
   #' @import data.table
+  #' @import stringr
+  #' @import dplyr
+  #' @import tidyr
+  #' @importFrom tibble rownames_to_column
   #' @return Formatted dataframe.
   #'
   #' @export
