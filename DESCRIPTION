@@ -1,6 +1,6 @@
 Package: BVAtoR
 Type: Package
-Title: Import EEG data to R.
+Title: Import EEG data to R
 Version: 0.1.0
 Author: Edouard F. Bonneville
 Maintainer: Edouard F. Bonneville <e.f.bonneville@lumc.nl>
@@ -13,5 +13,12 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     data.table,
-    pbapply
+    pbapply,
+    dplyr,
+    stringr,
+    tidyr,
+    magrittr,
+    tibble,
+    utils,
+    rlang
 RoxygenNote: 7.0.2
