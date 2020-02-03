@@ -19,7 +19,3 @@ Nothing in console, but files will be renamed.
 \description{
 Changes file types by editing endings.
 }
-\examples{
-change_file_endings("project_files/", ".vmrk", ".csv")
-
-}

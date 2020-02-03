@@ -2,6 +2,9 @@
 ## Support functions for EEG pipeline ##
 ##************************************##
 
+utils::globalVariables(c("ERP", "bound", "descrip", "high",
+                         "low", "main", "marker_num", "marker_order",
+                         "posit_datapoints"))
 
 # Change format of many files by changing file endings eg. .csv
 change_file_endings <- function(path,
@@ -11,14 +14,12 @@ change_file_endings <- function(path,
   #' Mass change file endings.
   #'
   #' @description Changes file types by editing endings.
+  #'
   #' @param path A number.
   #' @param ending_detect File ending to change e.g. ".vmrk"
   #' @param ending_replace File ending to change e.g. ".csv"
-  #' @return Nothing in console, but files will be renamed.
-  #' @examples
-  #' change_file_endings("project_files/", ".vmrk", ".csv")
   #'
-  #' @export
+  #' @return Nothing in console, but files will be renamed.
 
   # Get character vector of all file names
   old_files <- list.files(path = path,
@@ -42,13 +43,14 @@ get_voltages <- function(filename,
   #' Format .dat voltage file.
   #'
   #' @description Format .dat voltage file.
+  #'
   #' @param filename Voltage filename, full path.
   #' @param var_labs Variable labels to assign to filename
   #' parts separated by underscores e.g. c("subject", "condition").
   #' @param ERP List of ERP components and their lower/upper bounds.
   #' @param samp_freq_Hz Sampling frequency in Hz.
   #' @param full_window_bounds Bounds of time window is ms e.g. c(-200, 1198).
-  #' @importFrom magrittr %>%
+  #'
   #' @return Formatted voltage dataframe.
   #'
   #' @export
@@ -60,12 +62,13 @@ get_voltages <- function(filename,
   name <- str_match(filename, "[^/]+(?=\\.\\w+$)")[1]
 
   # Split rest based on underscore and name columns
-  name_split <- data.frame(str_split(name, "_", simplify = T), stringsAsFactors = F)
+  name_split <- data.frame(str_split(name, "_", simplify = T),
+                           stringsAsFactors = F)
 
   colnames(name_split) <- var_labs
 
   obj_datapoints <- cbind.data.frame(dat_vol, name_split) %>%
-    mutate(posit_datapoints = 1:n())
+    mutate_(posit_datapoints = 1:n())
 
   obj <- append_times_ERP(voltage_dat = obj_datapoints,
                           ERP = ERP,
@@ -81,10 +84,11 @@ get_markers <- function(filename,
   #' Format .vmrk marker file.
   #'
   #' @description Format .vmrk marker file.
+  #'
   #' @param filename Marker filename, full path.
   #' @param var_labs Variable labels to assign to filename
   #' parts separated by underscores e.g. c("subject", "condition").
-  #' @importFrom magrittr %>%
+  #'
   #' @return Formatted marker dataframe.
   #'
   #' @export
@@ -93,25 +97,24 @@ get_markers <- function(filename,
   triggers <- read.csv(filename, sep = "\n") %>%
 
     # rename single column as 'main'
-    dplyr::rename(main = names(.)) %>%
+    dplyr::rename_(main = names(.data)) %>%
 
     # Subset marker lines, ^ means at beginning
-    filter(str_detect(main, "^Mk")) %>%
+    filter_(str_detect(main, "^Mk")) %>%
 
     # Separate and label columns
-    separate(main, c("marker", "descrip", "posit_datapoints",
+    separate_(main, c("marker", "descrip", "posit_datapoints",
                      "size_datapoints", "channel_num", "dat"),
-             sep = ",", fill = "right", convert = T) %>%
+              sep = ",", fill = "right", convert = T) %>%
 
     # Separate marker columns
-    separate("marker", c("marker_num", "marker_type"), sep = "=") %>%
+    separate_("marker", c("marker_num", "marker_type"), sep = "=") %>%
 
     # Select S markers
-    #select(descrip) %>%
-    filter(str_detect(descrip, "S")) %>%
-    mutate(marker_order = 1:n()) %>%
-    mutate(posit_onset = posit_datapoints,
-           posit_datapoints = 1 + posit_datapoints - posit_datapoints[1])
+    filter_(str_detect(descrip, "S")) %>%
+    mutate_(marker_order = 1:n()) %>%
+    mutate_(posit_onset = posit_datapoints,
+            posit_datapoints = 1 + posit_datapoints - posit_datapoints[1])
 
   # separate from .csv ending
   name <- str_match(filename, "[^/]+(?=\\.\\w+$)")[1]
@@ -119,6 +122,7 @@ get_markers <- function(filename,
   # Split rest based on underscore and name columns
   name_split <- data.frame(str_split(name, "_", simplify = T),
                            stringsAsFactors = F)
+
   colnames(name_split) <- var_labs
 
   # Final marker data
@@ -137,15 +141,13 @@ append_times_ERP <- function(voltage_dat,
   #' Append ERPs to voltage file.
   #'
   #' @description Append ERPs to voltage file.
+  #'
   #' @param voltage_dat Formatted voltage dataframe.
   #' @param ERP List of ERP components and their lower/upper bounds.
   #' @param samp_freq_Hz Sampling frequency in Hz.
   #' @param full_window_bounds Bounds of time window is ms e.g. c(-200, 1198).
-  #' @importFrom magrittr %>%
-  #' @import data.table
-  #' @return Voltage with ERPs appropriately appendended (dataframe).
   #'
-  #' @export
+  #' @return Voltage with ERPs appropriately appendended (dataframe).
 
   sample_step <- 1000 / samp_freq_Hz
 
@@ -156,11 +158,10 @@ append_times_ERP <- function(voltage_dat,
   rep_ind <- nrow(voltage_dat) / length(time_samples)
 
   # if is.null ERP
-
   ERP_dat <- ERP_to_times(ERP, t = time_samples)
 
-  dat_appended <- setDT(voltage_dat) %>%
-    cbind(., ERP_dat[rep(seq_len(nrow(ERP_dat)), rep_ind), ])
+  dat_appended <- voltage_dat %>%
+    cbind.data.frame(.data, ERP_dat[rep(seq_len(nrow(ERP_dat)), rep_ind), ])
 
   return(dat_appended)
 }
@@ -171,9 +172,10 @@ ERP_to_times <- function(ERP_list, t) {
   #' Convert ERP list to dataframe with times.
   #'
   #' @description Convert ERP list to dataframe with times.
+  #'
   #' @param ERP_list List of ERP components and their lower/upper bounds.
   #' @param t Vector of times.
-  #' @importFrom magrittr %>%
+  #'
   #' @return Dataframe with ERP and times.
   #'
   #' @export
@@ -183,11 +185,11 @@ ERP_to_times <- function(ERP_list, t) {
   colnames(ERP_dat) <- c("low", "high")
 
   ERP_dat <- ERP_dat %>%
-    rownames_to_column(var= "ERP") %>%
-    gather(bound, t, low, high) %>%
-    select(-bound) %>%
+    rownames_to_column(var = "ERP") %>%
+    gather_(bound, t, low, high) %>%
+    select_(-bound) %>%
     right_join(data.frame(t = t), by = "t") %>%
-    fill(ERP)
+    fill_(ERP)
 
   return(ERP_dat)
 }

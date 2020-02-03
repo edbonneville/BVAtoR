@@ -10,13 +10,15 @@ BVA_to_R(
   var_labs,
   samp_freq_Hz,
   full_window_bounds,
+  save_markers = NULL,
+  save_voltages = NULL,
   filename_returned = NULL
 )
 }
 \arguments{
 \item{path}{Full path to all .vmrk and .dat files.}
 
-\item{ERP}{List of ERP components and their lower/upper bounds.}
+\item{ERP}{Named list of ERP components and their lower/upper bounds.}
 
 \item{var_labs}{Variable labels to assign to filename
 parts separated by underscores e.g. c("subject", "condition").}
@@ -24,6 +26,10 @@ parts separated by underscores e.g. c("subject", "condition").}
 \item{samp_freq_Hz}{Sampling frequency in Hz.}
 
 \item{full_window_bounds}{Bounds of time window is ms e.g. c(-200, 1198).}
+
+\item{save_markers}{(Optional) filename for marker csv file}
+
+\item{save_voltages}{(Optional) filename for voltages csv file}
 
 \item{filename_returned}{"filename.csv" if you want a .csv returned/}
 }
