@@ -6,6 +6,8 @@
 
 Minimal package to import EEG data from Brain Vision Analyzer (BVA) into R. 
 
+Work in progress.
+
 # Installation
 
 ```r
