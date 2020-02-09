@@ -10,6 +10,8 @@ Work in progress.
 
 # Installation
 
+To install the package, run:
+
 ```r
 devtools::install_github("edbonneville/BVAtoR")
 ```
