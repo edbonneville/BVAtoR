@@ -2,7 +2,9 @@
 ## Support functions for EEG pipeline ##
 ##************************************##
 
-#utils::globalVariables(c("."))
+# For package checks
+utils::globalVariables(c("."))
+posit_datapoints <- descrip <- marker <- main <- ERP <- time <- NULL
 
 # Make sure data.table knows we know we're using it
 .datatable.aware = TRUE
@@ -60,8 +62,6 @@ get_metadata <- function(filename,
 }
 
 
-
-
 get_markers <- function(filename) {
 
   #' Format .vmrk marker file.
@@ -74,6 +74,7 @@ get_markers <- function(filename) {
   #'
   #' @export
 
+  
   
   # Separation of marker columns later
   column_seps <- c("marker", "descrip", "posit_datapoints", 
@@ -91,28 +92,28 @@ get_markers <- function(filename) {
     data.table::setnames("main") %>%
 
     # Subset marker lines
-    .data[, .SD[stringr::str_detect(.data$main, "^Mk")]] %>% 
+    .[, .SD[stringr::str_detect(main, "^Mk")]] %>% 
 
     # Separate and label columns
-    .data[, (column_seps) := data.table::tstrsplit(
-      .data$main, split = ",", fixed = T
+    .[, (column_seps) := data.table::tstrsplit(
+      main, split = ",", fixed = T
     )] %>% 
     
     # Separate marker column
-    .data[, c("marker_num", "marker_type") := data.table::tstrsplit(
-      .data$marker, split = "=", fixed = T
+    .[, c("marker_num", "marker_type") := data.table::tstrsplit(
+      marker, split = "=", fixed = T
     )] %>% 
 
     # Keep only S markers for now
-    .data[, .SD[stringr::str_detect(.data$descrip, "S")]] %>% 
-    .data[, c("descrip", "posit_datapoints", "marker_num")] %>% 
-    .data[, "posit_datapoints" := as.numeric(.data$posit_datapoints)] %>% 
+    .[, .SD[stringr::str_detect(descrip, "S")]] %>% 
+    .[, c("descrip", "posit_datapoints", "marker_num")] %>% 
+    .[, "posit_datapoints" := as.numeric(posit_datapoints)] %>% 
     
     # We move posit data points so entire window is associated
     # with an S marker; and for merging with voltage file
-    .data[, ':=' (
-      "posit_onset" = .data$posit_datapoints,
-      "posit_datapoints" = 1 + .data$posit_datapoints - .data$posit_datapoints[1]
+    .[, ':=' (
+      "posit_onset" = posit_datapoints,
+      "posit_datapoints" = 1 + posit_datapoints - posit_datapoints[1]
     )]
 
   return(triggers)
@@ -153,9 +154,9 @@ ERP_to_times <- function(ERP_list, time_vec) {
     ) %>% 
     
     # Merge and label
-    .data[order(.data$time), !"bounds"] %>% 
+    .[order(time), !"bounds"] %>% 
     data.table::merge.data.table(time_dat, all.y = T) %>% 
-    .data[, "ERP" := zoo::na.locf(.data$ERP)] 
+    .[, "ERP" := zoo::na.locf(ERP)] 
 
   return(ERP_dat)
 }
@@ -187,7 +188,7 @@ one_vhdr <- function(path,
     file = vhdr_info$filename_voltages,
     sep = ";", 
     header = T
-  ) %>% .data[, .data$posit_datapoints := 1:.N]
+  ) %>% .[, "posit_datapoints" := seq(1, .N)]
   
   # Read markers file
   markers <- BVAtoR::get_markers(vhdr_info$filename_markers)
@@ -225,14 +226,14 @@ one_vhdr <- function(path,
     all.x = T
   ) %>% 
     data.table::setDT() %>% 
-    .data[, (cols) := lapply(.SD, zoo::na.locf), .SDcols = cols] %>% 
-    .data[, "time" := rep(time_vec, .N / length(time_vec))] %>% 
+    .[, (cols) := lapply(.SD, zoo::na.locf), .SDcols = cols] %>% 
+    .[, "time" := rep(time_vec, .N / length(time_vec))] %>% 
     #.[, time_onset := time[which(posit_datapoints == posit_onset)][1]]
     
     # Add ERPs and sort
     data.table::merge.data.table(y = ERP_dat, by = "time") %>% 
-    .data[order(.data$posit_datapoints)] %>% 
-    cbind(.data, metadat)
+    .[order(posit_datapoints)] %>% 
+    cbind(., metadat)
   
   return(merged_dat)
 }

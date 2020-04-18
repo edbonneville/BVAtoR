@@ -20,7 +20,6 @@
 #' @param filename_returned "filename.csv" if you want a .csv returned/
 #'
 #' @importFrom magrittr %>%
-#' @importFrom rlang .data
 #' @import data.table
 #'
 #' @return Formatted data.table
