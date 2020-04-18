@@ -4,13 +4,10 @@
 \alias{get_markers}
 \title{Format .vmrk marker file.}
 \usage{
-get_markers(filename, var_labs)
+get_markers(filename)
 }
 \arguments{
 \item{filename}{Marker filename, full path.}
-
-\item{var_labs}{Variable labels to assign to filename
-parts separated by underscores e.g. c("subject", "condition").}
 }
 \value{
 Formatted marker dataframe.

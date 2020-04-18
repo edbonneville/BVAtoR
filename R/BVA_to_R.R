@@ -4,103 +4,89 @@
 
 
 
-# Argument to save intermediate marker files?
+#' Pipeline from BVA exports to R dataframe.
+#'
+#' @description Take BVA exports and return large csv file
+#' with eveyrthing summarised.
+#'
+#' @param path Full path to all .vhdr, .vmrk and .dat files.
+#' Of the form "path/to/file/" with the final forward slash.
+#' If unspecified, defaults to current working directory.
+#' @param sep Separation in the filename e.g. "_"
+#' @param ERP_list Named list of ERP components and their lower/upper bounds.
+#' @param var_labs Variable labels to assign to filename
+#' parts separated by underscores e.g. c("subject", "condition").
+#' @param full_window_bounds Bounds of time window is ms e.g. c(-200, 1198).
+#' @param filename_returned "filename.csv" if you want a .csv returned/
+#'
+#' @importFrom magrittr %>%
+#' @importFrom rlang .data
+#' @import data.table
+#'
+#' @return Formatted data.table
+#' 
+#' @examples
+#' \dontrun{
+#' path <- "path/to/file/"
+#' 
+#' ERPs <- list(
+#' "baseline" = c(-200, -2), 
+#' "test_ERP" = c(0, 498),
+#' "ERP1" = c(500, 1198)
+#' )
+#' 
+#' obj <- BVA_to_R(
+#' path = path,
+#' sep = "_",
+#' ERP_list = ERPs,
+#' var_labs = c("subjID", "comp", "base", "cogn", "congr", "viol"),
+#' full_window_bounds = c(-200, 1198)
+#' )
+#' }
+#'
+#' @export
+
 BVA_to_R <- function(path,
-                     ERP,
+                     ERP_list,
                      var_labs,
-                     samp_freq_Hz,
+                     sep,
                      full_window_bounds,
-                     save_markers = NULL,
-                     save_voltages = NULL,
                      filename_returned = NULL) {
-
-  #' Pipeline from BVA exports to R dataframe.
-  #'
-  #' @description Take BVA exports and return large csv file
-  #' with eveyrthing summarised.
-  #'
-  #' @param path Full path to all .vmrk and .dat files.
-  #' @param ERP Named list of ERP components and their lower/upper bounds.
-  #' @param var_labs Variable labels to assign to filename
-  #' parts separated by underscores e.g. c("subject", "condition").
-  #' @param samp_freq_Hz Sampling frequency in Hz.
-  #' @param full_window_bounds Bounds of time window is ms e.g. c(-200, 1198).
-  #' @param filename_returned "filename.csv" if you want a .csv returned/
-  #' @param save_markers (Optional) filename for marker csv file
-  #' @param save_voltages (Optional) filename for voltages csv file
-  #'
-  #' @importFrom magrittr %>%
-  #' @importFrom  pbapply pblapply
-  #' @import dplyr
-  #' @importFrom data.table rbindlist fwrite fread
-  #' @import stringr
-  #' @import tidyr
-  #' @importFrom tibble rownames_to_column
-  #' @importFrom utils read.csv read.table
-  #' @importFrom rlang .data
-  #'
-  #' @return Formatted dataframe.
-  #'
-  #' @export
-
-  cat("Converting .vmrks to .csv ... \n")
-
-  # First convert .vmrk files - make a check here
-  invisible(
-    change_file_endings(path = path,
-                        ending_detect = ".vmrk",
-                        ending_replace = ".csv")
+  
+  # Set path if missing
+  if (missing(path)) path <- "" # assume all files are in current working 
+  
+  # List vhdr files in path
+  vhdr_files <- list.files(
+    path = path, 
+    pattern = ".vhdr", 
+    full.names = T
   )
-
-  cat("Processing marker files ... \n")
-
-
-  # List and convert marker files
-  marker_files <- list.files(path = path,
-                             pattern =  ".csv",
-                             full.names = T)
-
-  list_marker_files <- pblapply(marker_files, function(file) {
-
-    get_markers(file, var_labs = var_labs)
+  
+  # Checks
+  if (length(vhdr_files) == 0)
+    stop("There are no vhdr files in the supplied path!")
+  
+  ERP_vec <- unlist(ERP_list)
+  if (min(ERP_vec) != full_window_bounds[1] | 
+      max(ERP_vec) != full_window_bounds[2])
+    stop("Smallest/largest values of ERP bounds should = full_window_bounds")
+  
+  # Apply vhdr processing
+  list_processed_dats <- lapply(vhdr_files, function(vhdr_filename) {
+    
+    BVAtoR::one_vhdr(
+      path = path,
+      filename = vhdr_filename, 
+      sep = sep,
+      ERP_list = ERP_list,
+      var_labs = var_labs,
+      full_window_bounds = full_window_bounds
+    )
   })
-
-  big_marker_file <- rbindlist(list_marker_files)
-
-  if (!is.null(save_markers)) {
-    fwrite(big_marker_file, file = save_markers,
-           sep = ",", row.names = F)
-  }
-
-  # List and convert voltage files (.dat)
-  cat("\n Processing voltage files ... \n")
-
-
-  voltage_files <- list.files(path = path,
-                              pattern =  ".dat",
-                              full.names = T)
-
-  list_voltage_files <- pblapply(voltage_files, function(file) {
-
-    get_voltages(file, var_labs = var_labs,
-                 ERP = ERP, samp_freq_Hz = samp_freq_Hz,
-                 full_window_bounds = full_window_bounds)
-  })
-
-  big_voltage_file <- rbindlist(list_voltage_files)
-
-  if (!is.null(save_voltages)) {
-    fwrite(big_voltage_file, file = save_voltages,
-           sep = ",", row.names = F)
-  }
-
-
-  # Merge both together in big file
-  cat("\n Merging voltage and marker files ... \n")
-
-  result_file <- big_voltage_file %>%
-    left_join(big_marker_file) %>%
-    fill_(marker_num:marker_order)
+  
+  # Bind them together
+  result_file <- data.table::rbindlist(list_processed_dats)
 
   # Write .csv, or just return df
   if (is.null(filename_returned)) {
@@ -108,11 +94,11 @@ BVA_to_R <- function(path,
     return(result_file)
   } else {
 
-    cat("'\n Writing file to .csv...")
-
-    fwrite(result_file, file = filename_returned,
-           sep = ",", row.names = F)
-
-    cat("'\n Complete!")
+    data.table::fwrite(
+      result_file, 
+      file = filename_returned,
+      sep = ",", 
+      row.names = F
+    )
   }
 }

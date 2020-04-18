@@ -6,37 +6,53 @@
 \usage{
 BVA_to_R(
   path,
-  ERP,
+  ERP_list,
   var_labs,
-  samp_freq_Hz,
+  sep,
   full_window_bounds,
-  save_markers = NULL,
-  save_voltages = NULL,
   filename_returned = NULL
 )
 }
 \arguments{
-\item{path}{Full path to all .vmrk and .dat files.}
+\item{path}{Full path to all .vhdr, .vmrk and .dat files.
+Of the form "path/to/file/" with the final forward slash.
+If unspecified, defaults to current working directory.}
 
-\item{ERP}{Named list of ERP components and their lower/upper bounds.}
+\item{ERP_list}{Named list of ERP components and their lower/upper bounds.}
 
 \item{var_labs}{Variable labels to assign to filename
 parts separated by underscores e.g. c("subject", "condition").}
 
-\item{samp_freq_Hz}{Sampling frequency in Hz.}
+\item{sep}{Separation in the filename e.g. "_"}
 
 \item{full_window_bounds}{Bounds of time window is ms e.g. c(-200, 1198).}
-
-\item{save_markers}{(Optional) filename for marker csv file}
-
-\item{save_voltages}{(Optional) filename for voltages csv file}
 
 \item{filename_returned}{"filename.csv" if you want a .csv returned/}
 }
 \value{
-Formatted dataframe.
+Formatted data.table
 }
 \description{
 Take BVA exports and return large csv file
 with eveyrthing summarised.
+}
+\examples{
+\dontrun{
+path <- "path/to/file/"
+
+ERPs <- list(
+"baseline" = c(-200, -2), 
+"test_ERP" = c(0, 498),
+"ERP1" = c(500, 1198)
+)
+
+obj <- BVA_to_R(
+path = path,
+sep = "_",
+ERP_list = ERPs,
+var_labs = c("subjID", "comp", "base", "cogn", "congr", "viol"),
+full_window_bounds = c(-200, 1198)
+)
+}
+
 }

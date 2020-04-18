@@ -1,0 +1,116 @@
+Brain Vision Data Exchange Header File Version 2.0
+; Data created from history path: kons105_comp/Raw Data/New Reference_TP9_TP10/Linear Derivation_combine_EXG1_EXG2_HEOG/Filters_0.1-30Hz_24oct/Edit Markers/Edit Markers/Edit Markers/Edit Markers_final/OcularCorrection/Raw Data Inspection_Criteria_Set/Segmentation_178-205_known_correct_nobads/BaselineCorrection__noncogn_incongr_nonviol
+
+[Common Infos]
+Codepage=UTF-8
+DataFile=kons105_comp_BaselineCorrection__noncogn_incongr_nonviol.dat
+MarkerFile=kons105_comp_BaselineCorrection__noncogn_incongr_nonviol.vmrk
+DataFormat=ASCII
+; Data orientation: VECTORIZED=ch1,pt1, ch1,pt2..., MULTIPLEXED=ch1,pt1, ch2,pt1 ...
+DataOrientation=MULTIPLEXED
+DataType=TIMEDOMAIN
+NumberOfChannels=33
+DataPoints=12600
+; Sampling interval in microseconds if time domain (convert to Hertz:
+; 1000000 / SamplingInterval) or in Hertz if frequency domain:
+SamplingInterval=2000
+SegmentationType=MARKERBASED
+SegmentDataPoints=700
+
+[User Infos]
+; Each entry: Prop<Number>=<Type>,<Name>,<Value>,<Value2>,...,<ValueN>
+; Property number must be unique. Types can be int, single, string, bool, byte, double, uint
+; or arrays of those, indicated int-array etc
+; Array types have more than one value, number of values determines size of array.
+; Fields are delimited by commas, commas in strings are written \1
+
+[ASCII Infos]
+; Decimal symbol for floating point numbers: the header file always uses a dot (.),
+; however the data file might use a different one
+DecimalSymbol=.
+; SkipLines, SkipColumns: leading lines and columns with additional information.
+SkipLines=1
+SkipColumns=0
+
+[Channel Infos]
+; Each entry: Ch<Channel number>=<Name>,<Reference channel name>,
+; <Resolution in "Unit">,<Unit>, Future extensions...
+; Fields are delimited by commas, some fields might be omitted (empty).
+; Commas in channel names are coded as "\1".
+Ch1=Fp2,Mastoids,,µV
+Ch2=F8,Mastoids,,µV
+Ch3=FT8,Mastoids,,µV
+Ch4=T8,Mastoids,,µV
+Ch5=TP8,Mastoids,,µV
+Ch6=P8,Mastoids,,µV
+Ch7=TP10,Mastoids,,µV
+Ch8=O2,Mastoids,,µV
+Ch9=Oz,Mastoids,,µV
+Ch10=O1,Mastoids,,µV
+Ch11=TP9,Mastoids,,µV
+Ch12=P7,Mastoids,,µV
+Ch13=TP7,Mastoids,,µV
+Ch14=T7,Mastoids,,µV
+Ch15=FT7,Mastoids,,µV
+Ch16=F7,Mastoids,,µV
+Ch17=FP1,Mastoids,,µV
+Ch18=AFz,Mastoids,,µV
+Ch19=F4,Mastoids,,µV
+Ch20=FC4,Mastoids,,µV
+Ch21=C4,Mastoids,,µV
+Ch22=CP4,Mastoids,,µV
+Ch23=P4,Mastoids,,µV
+Ch24=Pz,Mastoids,,µV
+Ch25=P3,Mastoids,,µV
+Ch26=CP3,Mastoids,,µV
+Ch27=C3,Mastoids,,µV
+Ch28=FC3,Mastoids,,µV
+Ch29=F3,Mastoids,,µV
+Ch30=Fz,Mastoids,,µV
+Ch31=FCz,Mastoids,,µV
+Ch32=CPz,Mastoids,,µV
+Ch33=Cz,Mastoids,,µV
+
+[Channel User Infos]
+; Each entry: Prop<Number>=Ch<ChannelNumber>,<Type>,<Name>,<Value>,<Value2>,...,<ValueN>
+; Property number must be unique. Types can be int, single, string, bool, byte, double, uint
+; or arrays of those, indicated int-array etc
+; Array types have more than one value, number of values determines size of array.
+; Fields are delimited by commas, commas in strings are written \1
+; Properties are assigned to channels using their channel number.
+
+[Coordinates]
+; Each entry: Ch<Channel number>=<Radius>,<Theta>,<Phi>
+Ch1=1,90,72
+Ch2=1,90,36
+Ch3=1,90,18
+Ch4=1,90,0
+Ch5=1,90,-18
+Ch6=1,90,-36
+Ch7=1,113,-18
+Ch8=1,90,-72
+Ch9=1,90,-90
+Ch10=1,-90,72
+Ch11=1,-113,18
+Ch12=1,-90,36
+Ch13=1,-90,18
+Ch14=1,-90,0
+Ch15=1,-90,-18
+Ch16=1,-90,-36
+Ch17=1,-90,-72
+Ch18=1,67,90
+Ch19=1,60,51
+Ch20=1,49,29
+Ch21=1,45,0
+Ch22=1,49,-29
+Ch23=1,60,-51
+Ch24=1,45,-90
+Ch25=1,-60,51
+Ch26=1,-49,29
+Ch27=1,-45,0
+Ch28=1,-49,-29
+Ch29=1,-60,-51
+Ch30=1,45,90
+Ch31=1,23,90
+Ch32=1,22,-90
+Ch33=1,0,0

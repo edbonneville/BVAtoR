@@ -4,12 +4,12 @@
 \alias{ERP_to_times}
 \title{Convert ERP list to dataframe with times.}
 \usage{
-ERP_to_times(ERP_list, t)
+ERP_to_times(ERP_list, time_vec)
 }
 \arguments{
 \item{ERP_list}{List of ERP components and their lower/upper bounds.}
 
-\item{t}{Vector of times.}
+\item{time_vec}{Vector of times.}
 }
 \value{
 Dataframe with ERP and times.
