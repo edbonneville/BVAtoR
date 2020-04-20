@@ -13,10 +13,12 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     data.table,
-    pbapply,
     zoo,
     stringr,
     magrittr,
-    ini,
-    rlang
+    ini
 RoxygenNote: 7.1.0
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
