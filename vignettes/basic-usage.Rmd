@@ -2,11 +2,13 @@
 title: "Single Trial EEG Data Analysis and BVAtoR"
 output: rmarkdown::html_vignette
 author: "Sarah von Grebmer"
-date: "10 April 2020"
+date: "25 April 2020"
 vignette: >
   %\VignetteIndexEntry{Single Trial EEG Data Analysis and BVAtoR}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -14,6 +16,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+library(magrittr)
 ```
 
 
@@ -22,14 +26,10 @@ library(BVAtoR)
 library(ggplot2)
 ```
 
-
-Package Author: Edouard Bonneville 
-
-Package Last updated: 20 April 2020
-
-This is a pipeline for generating a dataframe for single trial EEG data exported from BVA. The BVAtoR package takes segmented output from BVA (.dat files, .vmrk files and .vhdr files) and transforms them into a single file with all voltage values, participants, conditions, and other varibles specified by the experimenter for further single trial statistical analysis. This pipeline describes the installation of the package used for this pipeline, the different functions in the package and the procedure to obtain a large dataframe containing EEG data from BVA output. 
+The BVAtoR package takes segmented output from BVA (.dat files, .vmrk files and .vhdr files) and transforms them into a single file with all voltage values, participants, conditions, and other variables specified by the experimenter for further single trial statistical analysis. This vignette describes the installation and use of the package in order to obtain a (large) dataframe containing EEG data from BVA output. 
 
 # BVAtoR Pre-Requisites
+
 This package works excusively with BVA (V2.2) export files, i.e. pre-processed, segmented and baseline-corrected data (not averaged data). An important step during segmentation in BVA is to assign the resulting node a meaningful name, ideally containing information about the participant (i.e. participant number) and the condition, separated by underscores (or any other separator). 
 Upon termination of the classical pre-processing procedure (e.g. re-referencing, filtering, ocular correction, artefact rejection, segmentation, baseline correction) in BVA, the data is ready for export. Note that each condition for each participant will have to be exported separately. See below for instructions on how to export data from BVA. 
 
@@ -63,15 +63,9 @@ non-viol: Level 1 of Condition 3
 
 # BVAtoR Package
 
-The BVAtoR package was specifically created to combine the voltage values in the .dat file with the information about the markers in the .vmrk file to generate a large datafile that contains the variables "marker"" and "voltage"", among other variables, such as condition etc. 
-
-## BVAtoR Installation 
+The BVAtoR package was specifically created to combine the voltage values in the .dat file with the information about the markers in the .vmrk file to generate a large datafile that contains the variables "marker" and "voltage", among other variables, such as condition etc. 
 
 ```{r installBVAtoR, eval=FALSE}
-library(devtools)
-# uncomment to run:
-#devtools::install_github("edbonneville/BVAtoR", dependencies = TRUE) # Ensure dependencies is set to TRUE
-
 # Load package
 library(BVAtoR)
 ```
@@ -134,40 +128,59 @@ ERPs <- list(
 
 ```{r corefunction}
 # Call main function and generate final datafile (obj)
-obj <- BVA_to_R(
-path = path, # path to export files
-sep = "_", # separator in export file names
-ERP_list = ERPs, # list of ERP components for the segment length
-var_labs = c("Subject", "Comp", "Export_Node", "Cognate_Status", "Congruency_Type", "Violation_Type"), # variables to be included in final datafile (correspond to order of components of the export file name separated by sep)
-full_window_bounds = c(-200, 1198)) #, # exported segment length
-#filename_returned = "Output.csv") # output datafile, read back in using fread from data.table
+obj <- BVA_to_R(path = path, 
+                sep = "_", 
+                ERP_list = ERPs, 
+                var_labs = c(
+                  "Subject", "Comp", "Export_Node", 
+                  "Cognate_Status", "Congruency_Type", "Violation_Type"
+                ),
+                full_window_bounds = c(-200, 1198)) 
 
 print(obj)
 ```
 
-## BVA_to_R Helper Functions
+## Other functions
 
 ### ERP_to_times
+
 This function converts ERP List to dataframe with ERP components and time vectors.
 
 ```{r ERPsToTimes}
-# Call help file
-#?BVAtoR::ERP_to_times
+times <- seq(-200, 1198)
+
+ERP_to_times(ERPs, times) %>% 
+  data.table::data.table()
 ```
 
 ### get_markers
+
 Formats the vmrk files to extract information about markers
 
 ```{r formatvmrk}
-# Call help file
-#?BVAtoR::get_markers
+get_markers("../inst/extdata/kons104_comp_BaselineCorrection_noncogn_incongr_nonviol.vmrk") %>% 
+  data.table::data.table()
 ```
 
 ### one_vhdr
-BVA_to_R function but for a single participant
+
+BVA_to_R function but for a single vhdr file
+
 ```{r BVAtoRsinglePPT}
-# Call help file
-#?BVAtoR::one_vhdr
+file <- "../inst/extdata/kons104_comp_BaselineCorrection_noncogn_incongr_nonviol.vhdr"
+path <- "../inst/extdata/"
+
+one_vhdr(
+  path = path,
+  filename = file,
+  sep = "_", 
+  ERP_list = ERPs, 
+  var_labs = c(
+     "Subject", "Comp", "Export_Node",
+     "Cognate_Status", "Congruency_Type", "Violation_Type"             
+  ),
+  full_window_bounds = c(-200, 1198)
+)
 ```
 
 # Session Information
