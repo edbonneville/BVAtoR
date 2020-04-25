@@ -75,7 +75,7 @@
       <h1 data-toc-skip>Single Trial EEG Data Analysis and BVAtoR</h1>
                         <h4 class="author">Sarah von Grebmer</h4>
             
-            <h4 class="date">10 April 2020</h4>
+            <h4 class="date">25 April 2020</h4>
       
       
       <div class="hidden name"><code>basic-usage.Rmd</code></div>
@@ -87,13 +87,12 @@
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">BVAtoR</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
 <span class="co">#&gt; Warning: package 'ggplot2' was built under R version 3.6.3</span></pre></body></html></div>
-<p>Package Author: Edouard Bonneville</p>
-<p>Package Last updated: 20 April 2020</p>
-<p>This is a pipeline for generating a dataframe for single trial EEG data exported from BVA. The BVAtoR package takes segmented output from BVA (.dat files, .vmrk files and .vhdr files) and transforms them into a single file with all voltage values, participants, conditions, and other varibles specified by the experimenter for further single trial statistical analysis. This pipeline describes the installation of the package used for this pipeline, the different functions in the package and the procedure to obtain a large dataframe containing EEG data from BVA output.</p>
+<p>The BVAtoR package takes segmented output from BVA (.dat files, .vmrk files and .vhdr files) and transforms them into a single file with all voltage values, participants, conditions, and other variables specified by the experimenter for further single trial statistical analysis. This vignette describes the installation and use of the package in order to obtain a (large) dataframe containing EEG data from BVA output.</p>
 <div id="bvator-pre-requisites" class="section level1">
 <h1 class="hasAnchor">
 <a href="#bvator-pre-requisites" class="anchor"></a>BVAtoR Pre-Requisites</h1>
-<p>This package works excusively with BVA (V2.2) export files, i.e. pre-processed, segmented and baseline-corrected data (not averaged data). An important step during segmentation in BVA is to assign the resulting node a meaningful name, ideally containing information about the participant (i.e. participant number) and the condition, separated by underscores (or any other separator). Upon termination of the classical pre-processing procedure (e.g. re-referencing, filtering, ocular correction, artefact rejection, segmentation, baseline correction) in BVA, the data is ready for export. Note that each condition for each participant will have to be exported separately. See below for instructions on how to export data from BVA.</p>
+<p>This package works excusively with BVA (V2.2) export files, i.e. pre-processed, segmented and baseline-corrected data (not averaged data). An important step during segmentation in BVA is to assign the resulting node a meaningful name, ideally containing information about the participant (i.e. participant number) and the condition, separated by underscores (or any other separator).</p>
+<p>Upon termination of the classical pre-processing procedure (e.g. re-referencing, filtering, ocular correction, artefact rejection, segmentation, baseline correction) in BVA, the data is ready for export. Note that each condition for each participant will have to be exported separately. See below for instructions on how to export data from BVA.</p>
 <div id="exporting-data-from-bva" class="section level2">
 <h2 class="hasAnchor">
 <a href="#exporting-data-from-bva" class="anchor"></a>Exporting Data from BVA</h2>
@@ -117,22 +116,13 @@
 <div id="bvator-package" class="section level1">
 <h1 class="hasAnchor">
 <a href="#bvator-package" class="anchor"></a>BVAtoR Package</h1>
-<p>The BVAtoR package was specifically created to combine the voltage values in the .dat file with the information about the markers in the .vmrk file to generate a large datafile that contains the variables “marker”" and “voltage”", among other variables, such as condition etc.</p>
-<div id="bvator-installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bvator-installation" class="anchor"></a>BVAtoR Installation</h2>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">devtools</span>)
-<span class="co"># uncomment to run:</span>
-<span class="co">#devtools::install_github("edbonneville/BVAtoR", dependencies = TRUE) # Ensure dependencies is set to TRUE</span>
-
-<span class="co"># Load package</span>
+<p>The BVAtoR package was specifically created to combine the voltage values in the .dat file with the information about the markers in the .vmrk file to generate a large datafile that contains the variables “marker” and “voltage”, among other variables, such as condition etc.</p>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># Load package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">BVAtoR</span>)</pre></body></html></div>
-</div>
-</div>
-<div id="bva_to_r-function-parameters" class="section level1">
-<h1 class="hasAnchor">
-<a href="#bva_to_r-function-parameters" class="anchor"></a>BVA_to_R Function: Parameters</h1>
-<p>BVAtoR is based on a number of helper functions which tackle the formatting of the export files and the extraction of crucial information, such as the sampling frequency or the marker names. The helper functions run in the background of the core function of this package, the BVA_to_R() function. Please see below for a more detailed description of the helper functions. The core function takes a number of parametersthat should be known to the researcher prior to starting this analysis:</p>
+<div id="bva_to_r-parameters" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bva_to_r-parameters" class="anchor"></a><code>BVA_to_R()</code> parameters</h2>
+<p>BVAtoR is based on a number of helper functions which tackle the formatting of the export files and the extraction of crucial information, such as the sampling frequency or the marker names. The helper functions run in the background of the core function of this package, the <code><a href="../reference/BVA_to_R.html">BVA_to_R()</a></code> function. Please see below for a more detailed description of the helper functions. The core function takes a number of parameters that should be known to the researcher prior to starting this analysis:</p>
 <ul>
 <li><p>path: path to the data folder with all exort files, e.g. “template/path/to/all/files/” . Specified outside the main function.</p></li>
 <li><p>full_window_bounds: The total length of the exported segment in ms (e.g. c(-200, 1200). Specified within the main function.</p></li>
@@ -150,9 +140,10 @@
 <li><p>sep: specifies the separator with which the variables within the exported data file names are separated by. Specified within the main function.</p></li>
 <li><p>filename_returned: the name of the file to be returned in csv format, e.g. “Output.csv”. Contains columns for subject, marker, condition (if applicable), timestamp, ERP component (if applicable), node of segmentation, task (if applicable) etc. for further single trial statisitical analysis in R. Specified within the main function.</p></li>
 </ul>
-<div id="define-bva_to_r-parameters" class="section level2">
+</div>
+<div id="bva_to_r-usage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#define-bva_to_r-parameters" class="anchor"></a>Define BVA_to_R Parameters</h2>
+<a href="#bva_to_r-usage" class="anchor"></a><code>BVA_to_R()</code> usage</h2>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="co"># Help to main function</span>
 <span class="co">#?BVA_to_R</span>
 
@@ -167,20 +158,17 @@
 <span class="st">"N400"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">350</span>, <span class="fl">498</span>),
 <span class="st">"P600"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">500</span>, <span class="fl">898</span>), <span class="co"># longer P600 window for late learners (example-specific)</span>
 <span class="st">"PostP600"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">900</span>, <span class="fl">1198</span>) <span class="co"># end of segment</span>
-)</pre></body></html></div>
-</div>
-</div>
-<div id="bva_to_r-function-useage" class="section level1">
-<h1 class="hasAnchor">
-<a href="#bva_to_r-function-useage" class="anchor"></a>BVA_to_R Function: Useage</h1>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># Call main function and generate final datafile (obj)</span>
-<span class="no">obj</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/BVA_to_R.html">BVA_to_R</a></span>(
-<span class="kw">path</span> <span class="kw">=</span> <span class="no">path</span>, <span class="co"># path to export files</span>
-<span class="kw">sep</span> <span class="kw">=</span> <span class="st">"_"</span>, <span class="co"># separator in export file names</span>
-<span class="kw">ERP_list</span> <span class="kw">=</span> <span class="no">ERPs</span>, <span class="co"># list of ERP components for the segment length</span>
-<span class="kw">var_labs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Subject"</span>, <span class="st">"Comp"</span>, <span class="st">"Export_Node"</span>, <span class="st">"Cognate_Status"</span>, <span class="st">"Congruency_Type"</span>, <span class="st">"Violation_Type"</span>), <span class="co"># variables to be included in final datafile (correspond to order of components of the export file name separated by sep)</span>
-<span class="kw">full_window_bounds</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">200</span>, <span class="fl">1198</span>)) <span class="co">#, # exported segment length</span>
-<span class="co">#filename_returned = "Output.csv") # output datafile, read back in using fread from data.table</span>
+)
+
+<span class="co"># Call main function and generate final datafile (obj)</span>
+<span class="no">obj</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/BVA_to_R.html">BVA_to_R</a></span>(<span class="kw">path</span> <span class="kw">=</span> <span class="no">path</span>,
+                <span class="kw">sep</span> <span class="kw">=</span> <span class="st">"_"</span>,
+                <span class="kw">ERP_list</span> <span class="kw">=</span> <span class="no">ERPs</span>,
+                <span class="kw">var_labs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
+                  <span class="st">"Subject"</span>, <span class="st">"Comp"</span>, <span class="st">"Export_Node"</span>,
+                  <span class="st">"Cognate_Status"</span>, <span class="st">"Congruency_Type"</span>, <span class="st">"Violation_Type"</span>
+                ),
+                <span class="kw">full_window_bounds</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">200</span>, <span class="fl">1198</span>))
 
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">obj</span>)
 <span class="co">#&gt;        time posit_datapoints    Fp2      F8    FT8     T8    TP8     P8   TP10</span>
@@ -255,30 +243,175 @@
 <span class="co">#&gt; 30842:        nonviol</span>
 <span class="co">#&gt; 30843:        nonviol</span>
 <span class="co">#&gt; 30844:        nonviol</span></pre></body></html></div>
-<div id="bva_to_r-helper-functions" class="section level2">
+<p>We can then use the dataframe for further manipulation/modelling/plotting:</p>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">obj</span> <span class="kw">%&gt;%</span>
+
+  <span class="co"># Plot Fp2 over time for both subjects - line for each marker</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="no">time</span>, <span class="no">Fp2</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="no">marker_num</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="kw">alpha</span> <span class="kw">=</span> <span class="fl">0.5</span>) +
+
+  <span class="co"># Add mean</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html">stat_summary</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">group</span> <span class="kw">=</span> <span class="fl">1</span>), <span class="kw">fun</span> <span class="kw">=</span> <span class="no">mean</span>,
+               <span class="kw">geom</span> <span class="kw">=</span> <span class="st">"line"</span>, <span class="kw">size</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">col</span> <span class="kw">=</span> <span class="st">"red"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="no">.</span> ~ <span class="no">Subject</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span>(<span class="kw">xintercept</span> <span class="kw">=</span> <span class="fl">0</span>, <span class="kw">linetype</span> <span class="kw">=</span> <span class="st">"dashed"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="kw">base_size</span> <span class="kw">=</span> <span class="fl">14</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="kw">legend.position</span> <span class="kw">=</span> <span class="st">"none"</span>)</pre></body></html></div>
+<p><img src="basic-usage_files/figure-html/plot-1.png" width="700"></p>
+</div>
+</div>
+<div id="other-functions" class="section level1">
+<h1 class="hasAnchor">
+<a href="#other-functions" class="anchor"></a>Other functions</h1>
+<div id="erp_to_times" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bva_to_r-helper-functions" class="anchor"></a>BVA_to_R Helper Functions</h2>
-<div id="erp_to_times" class="section level3">
-<h3 class="hasAnchor">
-<a href="#erp_to_times" class="anchor"></a>ERP_to_times</h3>
+<a href="#erp_to_times" class="anchor"></a><code>ERP_to_times()</code>
+</h2>
 <p>This function converts ERP List to dataframe with ERP components and time vectors.</p>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"># Call help file
-#?BVAtoR::ERP_to_times</pre></body></html></div>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">times</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(-<span class="fl">200</span>, <span class="fl">1198</span>)
+
+<span class="fu"><a href="../reference/ERP_to_times.html">ERP_to_times</a></span>(<span class="no">ERPs</span>, <span class="no">times</span>) <span class="kw">%&gt;%</span>
+  <span class="kw pkg">data.table</span><span class="kw ns">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span>()
+<span class="co">#&gt;       time      ERP</span>
+<span class="co">#&gt;    1: -200 baseline</span>
+<span class="co">#&gt;    2: -199 baseline</span>
+<span class="co">#&gt;    3: -198 baseline</span>
+<span class="co">#&gt;    4: -197 baseline</span>
+<span class="co">#&gt;    5: -196 baseline</span>
+<span class="co">#&gt;   ---              </span>
+<span class="co">#&gt; 1396: 1194 PostP600</span>
+<span class="co">#&gt; 1397: 1195 PostP600</span>
+<span class="co">#&gt; 1398: 1196 PostP600</span>
+<span class="co">#&gt; 1399: 1197 PostP600</span>
+<span class="co">#&gt; 1400: 1198 PostP600</span></pre></body></html></div>
 </div>
-<div id="get_markers" class="section level3">
-<h3 class="hasAnchor">
-<a href="#get_markers" class="anchor"></a>get_markers</h3>
-<p>Formats the vmrk files to extract information about markers</p>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"># Call help file
-#?BVAtoR::get_markers</pre></body></html></div>
+<div id="get_markers" class="section level2">
+<h2 class="hasAnchor">
+<a href="#get_markers" class="anchor"></a><code>get_markers()</code>
+</h2>
+<p>Formats the vmrk files to extract information about markers:</p>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="../reference/get_markers.html">get_markers</a></span>(<span class="st">"../inst/extdata/kons104_comp_BaselineCorrection_noncogn_incongr_nonviol.vmrk"</span>) <span class="kw">%&gt;%</span>
+  <span class="kw pkg">data.table</span><span class="kw ns">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html">data.table</a></span>()
+<span class="co">#&gt;     descrip posit_datapoints marker_num posit_onset</span>
+<span class="co">#&gt;  1:    S189                1        Mk2         101</span>
+<span class="co">#&gt;  2:    S183              701        Mk6         801</span>
+<span class="co">#&gt;  3:    S188             1401       Mk10        1501</span>
+<span class="co">#&gt;  4:    S180             2101       Mk15        2201</span>
+<span class="co">#&gt;  5:    S194             2801       Mk18        2901</span>
+<span class="co">#&gt;  6:    S191             3501       Mk22        3601</span>
+<span class="co">#&gt;  7:    S182             4201       Mk26        4301</span>
+<span class="co">#&gt;  8:    S186             4901       Mk30        5001</span>
+<span class="co">#&gt;  9:    S199             5601       Mk34        5701</span>
+<span class="co">#&gt; 10:    S197             6301       Mk38        6401</span>
+<span class="co">#&gt; 11:    S196             7001       Mk43        7101</span>
+<span class="co">#&gt; 12:    S203             7701       Mk46        7801</span>
+<span class="co">#&gt; 13:    S195             8401       Mk51        8501</span>
+<span class="co">#&gt; 14:    S190             9101       Mk54        9201</span>
+<span class="co">#&gt; 15:    S200             9801       Mk59        9901</span>
+<span class="co">#&gt; 16:    S184            10501       Mk63       10601</span>
+<span class="co">#&gt; 17:    S193            11201       Mk66       11301</span>
+<span class="co">#&gt; 18:    S205            11901       Mk70       12001</span>
+<span class="co">#&gt; 19:    S181            12601       Mk74       12701</span>
+<span class="co">#&gt; 20:    S178            13301       Mk79       13401</span>
+<span class="co">#&gt; 21:    S187            14001       Mk83       14101</span>
+<span class="co">#&gt; 22:    S185            14701       Mk87       14801</span>
+<span class="co">#&gt; 23:    S179            15401       Mk90       15501</span>
+<span class="co">#&gt; 24:    S201            16101       Mk94       16201</span>
+<span class="co">#&gt; 25:    S204            16801       Mk99       16901</span>
+<span class="co">#&gt; 26:    S202            17501      Mk102       17601</span>
+<span class="co">#&gt;     descrip posit_datapoints marker_num posit_onset</span></pre></body></html></div>
 </div>
-<div id="one_vhdr" class="section level3">
-<h3 class="hasAnchor">
-<a href="#one_vhdr" class="anchor"></a>one_vhdr</h3>
-<p>BVA_to_R function but for a single participant</p>
-<div class="sourceCode" id="cb7"><html><body><pre class="r"># Call help file
-#?BVAtoR::one_vhdr</pre></body></html></div>
-</div>
+<div id="one_vhdr" class="section level2">
+<h2 class="hasAnchor">
+<a href="#one_vhdr" class="anchor"></a><code>one_vhdr()</code>
+</h2>
+<p>The <code><a href="../reference/BVA_to_R.html">BVA_to_R()</a></code> function but for a single vhdr file:</p>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">file</span> <span class="kw">&lt;-</span> <span class="st">"../inst/extdata/kons104_comp_BaselineCorrection_noncogn_incongr_nonviol.vhdr"</span>
+<span class="no">path</span> <span class="kw">&lt;-</span> <span class="st">"../inst/extdata/"</span>
+
+<span class="fu"><a href="../reference/one_vhdr.html">one_vhdr</a></span>(
+  <span class="kw">path</span> <span class="kw">=</span> <span class="no">path</span>,
+  <span class="kw">filename</span> <span class="kw">=</span> <span class="no">file</span>,
+  <span class="kw">sep</span> <span class="kw">=</span> <span class="st">"_"</span>,
+  <span class="kw">ERP_list</span> <span class="kw">=</span> <span class="no">ERPs</span>,
+  <span class="kw">var_labs</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
+     <span class="st">"Subject"</span>, <span class="st">"Comp"</span>, <span class="st">"Export_Node"</span>,
+     <span class="st">"Cognate_Status"</span>, <span class="st">"Congruency_Type"</span>, <span class="st">"Violation_Type"</span>
+  ),
+  <span class="kw">full_window_bounds</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">200</span>, <span class="fl">1198</span>)
+)
+<span class="co">#&gt;        time posit_datapoints    Fp2     F8    FT8     T8   TP8     P8   TP10</span>
+<span class="co">#&gt;     1: -200                1 -5.132 -1.770 -0.219  2.732 4.565  9.213 -0.862</span>
+<span class="co">#&gt;     2: -198                2 -4.047 -1.380 -0.543  1.518 3.966  8.941 -1.495</span>
+<span class="co">#&gt;     3: -196                3 -2.915 -0.598 -0.586  0.341 3.340  8.509 -2.036</span>
+<span class="co">#&gt;     4: -194                4 -1.929  0.565 -0.241 -0.690 2.540  7.840 -2.474</span>
+<span class="co">#&gt;     5: -192                5 -1.137  2.049  0.470 -1.532 1.387  6.862 -2.753</span>
+<span class="co">#&gt;    ---                                                                      </span>
+<span class="co">#&gt; 18222: 1190            18196 19.772 13.677 10.484 10.859 6.442 -0.628  2.124</span>
+<span class="co">#&gt; 18223: 1192            18197 21.339 14.228 10.769 10.994 7.086  0.413  3.459</span>
+<span class="co">#&gt; 18224: 1194            18198 22.281 14.521 10.731 10.918 7.539  1.227  4.723</span>
+<span class="co">#&gt; 18225: 1196            18199 22.541 14.623 10.448 10.693 7.808  1.790  5.848</span>
+<span class="co">#&gt; 18226: 1198            18200 22.054 14.579 10.006 10.363 7.880  2.095  6.715</span>
+<span class="co">#&gt;           O2     Oz     O1    TP9      P7     TP7     T7    FT7     F7    FP1</span>
+<span class="co">#&gt;     1: 5.375  1.354 -4.257 -4.016 -14.087  -9.069 -4.742 -2.709 -2.273 -2.221</span>
+<span class="co">#&gt;     2: 5.183  0.686 -4.748 -4.816 -14.161  -9.707 -5.096 -1.484 -1.914 -2.004</span>
+<span class="co">#&gt;     3: 4.824 -0.021 -5.079 -5.803 -13.910  -9.935 -4.933 -0.084 -1.125 -1.570</span>
+<span class="co">#&gt;     4: 4.314 -0.713 -5.215 -6.734 -13.386  -9.775 -4.346  1.267  0.002 -0.953</span>
+<span class="co">#&gt;     5: 3.662 -1.306 -5.088 -7.392 -12.635  -9.298 -3.473  2.356  1.351 -0.233</span>
+<span class="co">#&gt;    ---                                                                       </span>
+<span class="co">#&gt; 18222: 0.223 -4.273 -0.775 -7.107 -10.039 -13.537 -7.029 -2.539 -0.039 14.938</span>
+<span class="co">#&gt; 18223: 1.049 -3.848 -0.862 -5.942 -10.166 -13.272 -7.327 -2.937  0.572 17.343</span>
+<span class="co">#&gt; 18224: 1.759 -3.299 -0.595 -4.504  -9.949 -12.758 -7.302 -3.222  0.703 19.413</span>
+<span class="co">#&gt; 18225: 2.413 -2.581  0.021 -3.007  -9.448 -12.050 -6.992 -3.328  0.350 20.850</span>
+<span class="co">#&gt; 18226: 3.107 -1.648  0.974 -1.635  -8.667 -11.141 -6.411 -3.141 -0.359 21.435</span>
+<span class="co">#&gt;           AFz     F4    FC4     C4    CP4    P4     Pz      P3     CP3      C3</span>
+<span class="co">#&gt;     1: -4.558 -7.670 -6.508 -7.184  0.137 5.398  3.268  -6.575  -2.973  -1.974</span>
+<span class="co">#&gt;     2: -3.674 -6.318 -6.081 -7.493 -0.881 4.971  3.407  -5.853  -2.190  -0.900</span>
+<span class="co">#&gt;     3: -2.402 -4.613 -5.246 -7.682 -2.129 4.117  3.333  -4.973  -1.258   0.424</span>
+<span class="co">#&gt;     4: -0.918 -2.791 -4.202 -7.906 -3.652 2.822  2.982  -4.077  -0.305   1.794</span>
+<span class="co">#&gt;     5:  0.646 -1.008 -3.099 -8.238 -5.452 1.139  2.343  -3.261   0.567   3.003</span>
+<span class="co">#&gt;    ---                                                                        </span>
+<span class="co">#&gt; 18222: 16.521 18.660 21.484 13.345  6.427 5.928 -2.389  -8.759 -15.869 -16.665</span>
+<span class="co">#&gt; 18223: 17.886 19.127 21.192 12.446  5.719 5.574 -3.198 -10.387 -17.758 -19.098</span>
+<span class="co">#&gt; 18224: 18.712 19.045 20.381 11.318  4.979 5.273 -3.674 -11.398 -18.949 -20.843</span>
+<span class="co">#&gt; 18225: 18.891 18.483 19.132 10.117  4.323 5.163 -3.757 -11.709 -19.319 -21.698</span>
+<span class="co">#&gt; 18226: 18.412 17.532 17.562  9.010  3.872 5.343 -3.393 -11.246 -18.767 -21.512</span>
+<span class="co">#&gt;           FC3     F3     Fz    FCz    CPz     Cz descrip marker_num posit_onset</span>
+<span class="co">#&gt;     1:  0.263 -1.932 -3.884 -1.142  3.987  3.794    S189        Mk2         101</span>
+<span class="co">#&gt;     2:  1.233 -1.061 -2.557  0.476  4.463  4.931    S189        Mk2         101</span>
+<span class="co">#&gt;     3:  2.549  0.324 -0.682  2.514  4.854  6.143    S189        Mk2         101</span>
+<span class="co">#&gt;     4:  3.980  2.005  1.466  4.651  5.037  7.242    S189        Mk2         101</span>
+<span class="co">#&gt;     5:  5.314  3.724  3.666  6.611  4.915  8.039    S189        Mk2         101</span>
+<span class="co">#&gt;    ---                                                                         </span>
+<span class="co">#&gt; 18222:  1.837  9.483 12.874 16.063  0.494  6.625    S202      Mk102       17601</span>
+<span class="co">#&gt; 18223:  1.207 10.522 13.988 16.001 -1.074  4.815    S202      Mk102       17601</span>
+<span class="co">#&gt; 18224:  0.500 11.151 14.454 15.360 -2.523  2.761    S202      Mk102       17601</span>
+<span class="co">#&gt; 18225: -0.218 11.266 14.218 14.248 -3.655  0.700    S202      Mk102       17601</span>
+<span class="co">#&gt; 18226: -0.840 10.851 13.323 12.797 -4.289 -1.109    S202      Mk102       17601</span>
+<span class="co">#&gt;             ERP Subject Comp        Export_Node Cognate_Status Congruency_Type</span>
+<span class="co">#&gt;     1: baseline kons104 comp BaselineCorrection        noncogn         incongr</span>
+<span class="co">#&gt;     2: baseline kons104 comp BaselineCorrection        noncogn         incongr</span>
+<span class="co">#&gt;     3: baseline kons104 comp BaselineCorrection        noncogn         incongr</span>
+<span class="co">#&gt;     4: baseline kons104 comp BaselineCorrection        noncogn         incongr</span>
+<span class="co">#&gt;     5: baseline kons104 comp BaselineCorrection        noncogn         incongr</span>
+<span class="co">#&gt;    ---                                                                        </span>
+<span class="co">#&gt; 18222: PostP600 kons104 comp BaselineCorrection        noncogn         incongr</span>
+<span class="co">#&gt; 18223: PostP600 kons104 comp BaselineCorrection        noncogn         incongr</span>
+<span class="co">#&gt; 18224: PostP600 kons104 comp BaselineCorrection        noncogn         incongr</span>
+<span class="co">#&gt; 18225: PostP600 kons104 comp BaselineCorrection        noncogn         incongr</span>
+<span class="co">#&gt; 18226: PostP600 kons104 comp BaselineCorrection        noncogn         incongr</span>
+<span class="co">#&gt;        Violation_Type</span>
+<span class="co">#&gt;     1:        nonviol</span>
+<span class="co">#&gt;     2:        nonviol</span>
+<span class="co">#&gt;     3:        nonviol</span>
+<span class="co">#&gt;     4:        nonviol</span>
+<span class="co">#&gt;     5:        nonviol</span>
+<span class="co">#&gt;    ---               </span>
+<span class="co">#&gt; 18222:        nonviol</span>
+<span class="co">#&gt; 18223:        nonviol</span>
+<span class="co">#&gt; 18224:        nonviol</span>
+<span class="co">#&gt; 18225:        nonviol</span>
+<span class="co">#&gt; 18226:        nonviol</span></pre></body></html></div>
 </div>
 </div>
 <div id="session-information" class="section level1">
@@ -300,7 +433,7 @@
 <span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; other attached packages:</span>
-<span class="co">#&gt; [1] ggplot2_3.3.0 BVAtoR_0.1.0 </span>
+<span class="co">#&gt; [1] ggplot2_3.3.0 BVAtoR_0.1.0  magrittr_1.5 </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; loaded via a namespace (and not attached):</span>
 <span class="co">#&gt;  [1] Rcpp_1.0.3        compiler_3.6.2    pillar_1.4.3      tools_3.6.2      </span>
@@ -310,10 +443,10 @@
 <span class="co">#&gt; [17] xfun_0.12         withr_2.1.2       stringr_1.4.0     dplyr_0.8.5      </span>
 <span class="co">#&gt; [21] knitr_1.28        desc_1.2.0        fs_1.3.1          rprojroot_1.3-2  </span>
 <span class="co">#&gt; [25] grid_3.6.2        tidyselect_1.0.0  glue_1.3.1        data.table_1.12.8</span>
-<span class="co">#&gt; [29] R6_2.4.1          rmarkdown_2.1     purrr_0.3.3       magrittr_1.5     </span>
+<span class="co">#&gt; [29] R6_2.4.1          rmarkdown_2.1     farver_2.0.3      purrr_0.3.3      </span>
 <span class="co">#&gt; [33] backports_1.1.5   scales_1.1.0      htmltools_0.4.0   MASS_7.3-51.5    </span>
-<span class="co">#&gt; [37] assertthat_0.2.1  colorspace_1.4-1  ini_0.3.1         stringi_1.4.5    </span>
-<span class="co">#&gt; [41] munsell_0.5.0     crayon_1.3.4      zoo_1.8-7</span></pre></body></html></div>
+<span class="co">#&gt; [37] assertthat_0.2.1  colorspace_1.4-1  labeling_0.3      ini_0.3.1        </span>
+<span class="co">#&gt; [41] stringi_1.4.5     munsell_0.5.0     crayon_1.3.4      zoo_1.8-7</span></pre></body></html></div>
 </div>
   </div>
 

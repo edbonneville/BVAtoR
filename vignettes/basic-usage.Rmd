@@ -31,6 +31,7 @@ The BVAtoR package takes segmented output from BVA (.dat files, .vmrk files and 
 # BVAtoR Pre-Requisites
 
 This package works excusively with BVA (V2.2) export files, i.e. pre-processed, segmented and baseline-corrected data (not averaged data). An important step during segmentation in BVA is to assign the resulting node a meaningful name, ideally containing information about the participant (i.e. participant number) and the condition, separated by underscores (or any other separator). 
+
 Upon termination of the classical pre-processing procedure (e.g. re-referencing, filtering, ocular correction, artefact rejection, segmentation, baseline correction) in BVA, the data is ready for export. Note that each condition for each participant will have to be exported separately. See below for instructions on how to export data from BVA. 
 
 ## Exporting Data from BVA
@@ -70,10 +71,10 @@ The BVAtoR package was specifically created to combine the voltage values in the
 library(BVAtoR)
 ```
 
-# BVA_to_R Function: Parameters
+## `BVA_to_R()` parameters
 
-BVAtoR is based on a number of helper functions which tackle the formatting of the export files and the extraction of crucial information, such as the sampling frequency or the marker names. The helper functions run in the background of the core function of this package, the BVA_to_R() function. Please see below for a more detailed description of the helper functions. 
-The core function takes a number of parametersthat should be known to the researcher prior to starting this analysis: 
+BVAtoR is based on a number of helper functions which tackle the formatting of the export files and the extraction of crucial information, such as the sampling frequency or the marker names. The helper functions run in the background of the core function of this package, the `BVA_to_R()` function. Please see below for a more detailed description of the helper functions. 
+The core function takes a number of parameters that should be known to the researcher prior to starting this analysis: 
 
 * path: path to the data folder with all exort files, e.g. "template/path/to/all/files/" . Specified outside the main function.
 
@@ -104,9 +105,10 @@ In conclusion, the time bounds for each ERP component cannot be odd numbers. See
 
 * filename_returned: the name of the file to be returned in csv format, e.g. "Output.csv". Contains columns for subject, marker, condition (if applicable), timestamp, ERP component (if applicable), node of segmentation, task (if applicable) etc. for further single trial statisitical analysis in R. Specified within the main function.
 
-## Define BVA_to_R Parameters
 
-```{r defineparameters}
+## `BVA_to_R()` usage
+
+```{r corefunction}
 # Help to main function
 #?BVA_to_R
 
@@ -122,11 +124,7 @@ ERPs <- list(
 "P600" = c(500, 898), # longer P600 window for late learners (example-specific)
 "PostP600" = c(900, 1198) # end of segment
 )
-```
 
-# BVA_to_R Function: Useage
-
-```{r corefunction}
 # Call main function and generate final datafile (obj)
 obj <- BVA_to_R(path = path, 
                 sep = "_", 
@@ -140,9 +138,27 @@ obj <- BVA_to_R(path = path,
 print(obj)
 ```
 
-## Other functions
+We can then use the dataframe for further manipulation/modelling/plotting:
 
-### ERP_to_times
+```{r plot}
+obj %>% 
+  
+  # Plot Fp2 over time for both subjects - line for each marker
+  ggplot(aes(time, Fp2, col = marker_num)) +
+  geom_line(alpha = 0.5) +
+  
+  # Add mean
+  stat_summary(aes(group = 1), fun = mean,
+               geom = "line", size = 2, col = "red") +
+  facet_wrap(. ~ Subject) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  theme_bw(base_size = 14) +
+  theme(legend.position = "none") 
+```
+
+# Other functions
+
+## `ERP_to_times()`
 
 This function converts ERP List to dataframe with ERP components and time vectors.
 
@@ -153,18 +169,18 @@ ERP_to_times(ERPs, times) %>%
   data.table::data.table()
 ```
 
-### get_markers
+## `get_markers()`
 
-Formats the vmrk files to extract information about markers
+Formats the vmrk files to extract information about markers:
 
 ```{r formatvmrk}
 get_markers("../inst/extdata/kons104_comp_BaselineCorrection_noncogn_incongr_nonviol.vmrk") %>% 
   data.table::data.table()
 ```
 
-### one_vhdr
+## `one_vhdr()`
 
-BVA_to_R function but for a single vhdr file
+The `BVA_to_R()` function but for a single vhdr file:
 
 ```{r BVAtoRsinglePPT}
 file <- "../inst/extdata/kons104_comp_BaselineCorrection_noncogn_incongr_nonviol.vhdr"

@@ -13,7 +13,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Import EEG data to R">
 <meta property="og:description" content="Import EEG data from Brain Vision Analyzer (BVA) into R. 
-    Does not require use of knowledge of MATLAB.">
+    Does not require knowledge of MATLAB.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -72,22 +72,55 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-
 <div id="bvator" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#bvator" class="anchor"></a>BVAtoR</h1></div>
 <!-- badges: start -->
 
-<p>Minimal package to import EEG data from Brain Vision Analyzer (BVA) into R.</p>
-<p>Work in progress.</p>
-</div>
-<div id="installation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h1>
+<p>Minimal package to import electroencephalography (EEG) data from Brain Vision Analyzer (BVA, version &gt;= 2.2) into R. It is meant as a first step before performing single trial EEG analysis. For more information, please read the <a href="https://edbonneville.github.io/BVAtoR/articles/basic-usage.html">vignette</a>.</p>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
 <p>To install the package, run:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"edbonneville/BVAtoR"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"edbonneville/BVAtoR"</span>, <span class="kw">dependencies</span> <span class="kw">=</span> <span class="no">T</span>)</pre></div>
 </div>
-
+<div id="additional-functionality" class="section level2">
+<h2 class="hasAnchor">
+<a href="#additional-functionality" class="anchor"></a>Additional functionality</h2>
+<p>The package will not be developed beyond the simple import functionality - only bugs/compatibility issues will be treated. If you need extra functionality beyond data import (e.g. plotting), we highly recommend looking at the following R packages, which are both still under active development:</p>
+<ul>
+<li>
+<a href="https://github.com/craddm/eegUtils">eegUtils</a> by <a href="https://www.mattcraddock.com/">Matt Craddock</a>
+</li>
+<li>
+<a href="https://github.com/bnicenboim/eeguana/">eeguana</a> by <a href="https://bnicenboim.github.io/">Bruno Nicenboim</a>
+</li>
+</ul>
+</div>
+<div id="contributors" class="section level2">
+<h2 class="hasAnchor">
+<a href="#contributors" class="anchor"></a>Contributors</h2>
+<table class="table">
+<thead><tr class="header">
+<th>Name</th>
+<th>Affiliation</th>
+<th>Role</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Edouard F. Bonneville</td>
+<td>Leiden University Medical Center (NL)</td>
+<td>Maintainer</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.multilingualmind.eu/sarah-von-grebmer-zu-wolfsthurn?fbclid=IwAR3eL2IgqgbKIeGFRZtdNaLHDswC9iraLNxXDrVorQh92mK16iH5NJjLjwE">Sarah von Grebmer</a></td>
+<td>Leiden University (NL)</td>
+<td>Collaborator</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -102,7 +135,8 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Edouard F. Bonneville <br><small class="roles"> Maintainer </small>  </li>
+<li>Edouard F. Bonneville <br><small class="roles"> Author, maintainer </small>  </li>
+<li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
 

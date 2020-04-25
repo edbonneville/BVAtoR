@@ -2,8 +2,8 @@ Package: BVAtoR
 Type: Package
 Title: Import EEG data to R
 Version: 0.1.0
-Author: Edouard F. Bonneville
-Maintainer: Edouard F. Bonneville <e.f.bonneville@lumc.nl>
+Authors@R: c(person("Edouard F.", "Bonneville", email = "e.f.bonneville@lumc.nl", role = c("aut", "cre")),
+    person("Sarah", "von Grebmer zu Wolfsthurn", role = c("ctb")))
 Description: Import EEG data from Brain Vision Analyzer (BVA) into R. 
     Does not require knowledge of MATLAB.
 Depends: 
