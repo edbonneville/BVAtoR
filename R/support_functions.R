@@ -238,5 +238,3 @@ one_vhdr <- function(path,
   return(merged_dat)
 }
 
-
-
