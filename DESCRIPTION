@@ -1,7 +1,7 @@
 Package: BVAtoR
 Type: Package
 Title: Import EEG data to R
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(person("Edouard F.", "Bonneville", email = "e.f.bonneville@lumc.nl", role = c("aut", "cre")),
     person("Sarah", "von Grebmer zu Wolfsthurn", role = c("ctb")))
 Description: Import EEG data from Brain Vision Analyzer (BVA) into R. 
@@ -14,10 +14,8 @@ LazyData: true
 Imports:
     data.table,
     zoo,
-    stringr,
-    magrittr,
     ini
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: 
     knitr,
     rmarkdown,

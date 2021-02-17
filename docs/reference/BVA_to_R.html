@@ -73,7 +73,7 @@ with eveyrthing summarised." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BVAtoR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ with eveyrthing summarised." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -126,14 +126,14 @@ with eveyrthing summarised." />
 with eveyrthing summarised.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>BVA_to_R</span>(
-  <span class='no'>path</span>,
-  <span class='no'>ERP_list</span>,
-  <span class='no'>var_labs</span>,
-  <span class='no'>sep</span>,
-  <span class='no'>full_window_bounds</span>,
-  <span class='kw'>filename_returned</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>BVA_to_R</span><span class='op'>(</span>
+  <span class='va'>path</span>,
+  <span class='va'>ERP_list</span>,
+  <span class='va'>var_labs</span>,
+  <span class='va'>sep</span>,
+  <span class='va'>full_window_bounds</span>,
+  filename_returned <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -172,23 +172,25 @@ parts separated by underscores e.g. c("subject", "condition").</p></td>
     <p>Formatted data.table</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>path</span> <span class='kw'>&lt;-</span> <span class='st'>"path/to/file/"</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>path</span> <span class='op'>&lt;-</span> <span class='st'>"path/to/file/"</span>
 
-<span class='no'>ERPs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
-<span class='st'>"baseline"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>200</span>, -<span class='fl'>2</span>),
-<span class='st'>"test_ERP"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>498</span>),
-<span class='st'>"ERP1"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>500</span>, <span class='fl'>1198</span>)
-)
+<span class='va'>ERPs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+<span class='st'>"baseline"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>200</span>, <span class='op'>-</span><span class='fl'>2</span><span class='op'>)</span>,
+<span class='st'>"test_ERP"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>498</span><span class='op'>)</span>,
+<span class='st'>"ERP1"</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>500</span>, <span class='fl'>1198</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='no'>obj</span> <span class='kw'>&lt;-</span> <span class='fu'>BVA_to_R</span>(
-<span class='kw'>path</span> <span class='kw'>=</span> <span class='no'>path</span>,
-<span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>,
-<span class='kw'>ERP_list</span> <span class='kw'>=</span> <span class='no'>ERPs</span>,
-<span class='kw'>var_labs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"subjID"</span>, <span class='st'>"comp"</span>, <span class='st'>"base"</span>, <span class='st'>"cogn"</span>, <span class='st'>"congr"</span>, <span class='st'>"viol"</span>),
-<span class='kw'>full_window_bounds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>200</span>, <span class='fl'>1198</span>)
-)
-}</div></pre>
+<span class='va'>obj</span> <span class='op'>&lt;-</span> <span class='fu'>BVA_to_R</span><span class='op'>(</span>
+path <span class='op'>=</span> <span class='va'>path</span>,
+sep <span class='op'>=</span> <span class='st'>"_"</span>,
+ERP_list <span class='op'>=</span> <span class='va'>ERPs</span>,
+var_labs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"subjID"</span>, <span class='st'>"comp"</span>, <span class='st'>"base"</span>, <span class='st'>"cogn"</span>, <span class='st'>"congr"</span>, <span class='st'>"viol"</span><span class='op'>)</span>,
+full_window_bounds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>200</span>, <span class='fl'>1198</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -204,7 +206,7 @@ parts separated by underscores e.g. c("subject", "condition").</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
