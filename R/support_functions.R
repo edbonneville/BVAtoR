@@ -3,10 +3,8 @@
 ##************************************##
 
 # For package checks
-utils::globalVariables(c("."))
-posit_datapoints <- descrip <- marker <- main <- ERP <- time <- NULL
-
-# Make sure data.table knows we know we're using it
+#utils::globalVariables(c("."))
+#posit_datapoints <- descrip <- marker <- main <- ERP <- time <- NULL
 .datatable.aware = TRUE
 
 
@@ -16,25 +14,26 @@ posit_datapoints <- descrip <- marker <- main <- ERP <- time <- NULL
 
 
 # Read vhdr meta file
-get_vhdr <- function(filename,
-                     path) {
-  
+get_vhdr <- function(filename, path) {
+
   # Read in common infos part
-  infos_vhdr <- ini::read.ini(filename)$`Common Infos`
-  
+  infos_vhdr <- ini::read.ini(filename)[["Common Infos"]]
+
   # Extract data
   samp_freq <- 1000000 / as.numeric(infos_vhdr$SamplingInterval)
   #total_datpoints <- as.numeric(test_vhdr$DataPoints)
-  
+
   # Markerfile
-  filename_markers <- paste0(path, infos_vhdr$MarkerFile)
-  filename_voltages <- paste0(path, infos_vhdr$DataFile)
-  
+  filename_markers <- paste0(path, infos_vhdr[["MarkerFile"]])
+  filename_voltages <- paste0(path, infos_vhdr[["DataFile"]])
+
   # Put all in list
-  list_vhdr <- list("samp_freq" = samp_freq, 
-                    "filename_markers" = filename_markers,
-                    "filename_voltages" = filename_voltages)
-  
+  list_vhdr <- list(
+    "samp_freq" = samp_freq,
+    "filename_markers" = filename_markers,
+    "filename_voltages" = filename_voltages
+  )
+
   return(list_vhdr)
 }
 
@@ -42,23 +41,23 @@ get_vhdr <- function(filename,
 get_metadata <- function(filename,
                          var_labs,
                          sep) {
-  
+
   # Extract part of filenames without end
-  name <- stringr::str_extract(filename, "[^/]+(?=\\.\\w+$)")
-  
-  # Split rest based on underscore and name columns
-  name_split <- data.frame(
-    stringr::str_split(name, sep, simplify = T),
-    stringsAsFactors = F
+  name <- regmatches(
+    x = filename,
+    m = regexpr(pattern = "[^/]+(?=\\.\\w+$)", text = filename, perl = TRUE)
   )
-  
+
+  # Split rest based on underscore and name columns
+  name_split <- unlist(strsplit(name, split = "_"))
+
   # Make a check
-  if (ncol(name_split) != length(var_labs))
+  if (length(name_split) != length(var_labs))
     stop(paste0("var_labs should be of length ", ncol(name_split)))
-  
-  colnames(name_split) <- var_labs
-  
-  return(name_split)
+
+  names(name_split) <- var_labs
+
+  return(data.frame(t(name_split)))
 }
 
 
@@ -74,49 +73,44 @@ get_markers <- function(filename) {
   #'
   #' @export
 
-  
-  
+  # For R check
+  posit_datapoints <- main <- marker <- descrip <- NULL
+
   # Separation of marker columns later
-  column_seps <- c("marker", "descrip", "posit_datapoints", 
+  column_seps <- c("marker", "descrip", "posit_datapoints",
                    "size_datapoints", "channel_num", "date")
-  
+
   # Get triggers
   triggers <- data.table::fread(
-    filename, 
-    fill = TRUE, 
-    header = F, 
+    filename,
+    fill = TRUE,
+    header = F,
     sep = ";"
-  ) %>%
+  )
 
-    # Rename single column as 'main'
-    data.table::setnames("main") %>%
+  # Rename single column as 'main'
+  data.table::setnames(x = triggers, "main")
+  triggers_subset <- triggers[grepl(pattern = "^Mk", main)]
 
-    # Subset marker lines
-    .[, .SD[stringr::str_detect(main, "^Mk")]] %>% 
+  # Separate and label columns
+  triggers_subset[, (column_seps) := data.table::tstrsplit(
+    main, split = ",", fixed = T
+  )]
 
-    # Separate and label columns
-    .[, (column_seps) := data.table::tstrsplit(
-      main, split = ",", fixed = T
-    )] %>% 
-    
-    # Separate marker column
-    .[, c("marker_num", "marker_type") := data.table::tstrsplit(
-      marker, split = "=", fixed = T
-    )] %>% 
+  # Separate marker column
+  triggers_subset[, c("marker_num", "marker_type") := data.table::tstrsplit(
+    marker, split = "=", fixed = T
+  )]
 
-    # Keep only S markers for now
-    .[, .SD[stringr::str_detect(descrip, "S")]] %>% 
-    .[, c("descrip", "posit_datapoints", "marker_num")] %>% 
-    .[, "posit_datapoints" := as.numeric(posit_datapoints)] %>% 
-    
-    # We move posit data points so entire window is associated
-    # with an S marker; and for merging with voltage file
-    .[, ':=' (
-      "posit_onset" = posit_datapoints,
-      "posit_datapoints" = 1 + posit_datapoints - posit_datapoints[1]
-    )]
+  triggers_subset[, setdiff(names(triggers_subset), c("descrip", "posit_datapoints", "marker_num")) := NULL]
+  triggers_subset[, "posit_datapoints" := as.numeric(posit_datapoints)]
+  triggers_markers_S <- triggers_subset[grepl(pattern = "^S", x = descrip)]
+  triggers_markers_S[, ':=' (
+    "posit_onset" = posit_datapoints,
+    "posit_datapoints" = 1 + posit_datapoints - posit_datapoints[1]
+  )]
 
-  return(triggers)
+  return(triggers_markers_S)
 }
 
 
@@ -134,31 +128,36 @@ ERP_to_times <- function(ERP_list, time_vec) {
   #' @return Dataframe with ERP and times.
   #'
   #' @export
-  
+
+  # For R check
+  ERP <- NULL
 
   # Make t into a data.table
   time_dat <- data.table::data.table("time" = time_vec)
-  
-  # Collapse list
-  ERP_dat <- do.call(rbind, ERP_list) %>%
-    as.data.frame() %>% 
-    
-    # Change names and make long format
-    data.table::setDT(keep.rownames = T) %>% 
-    data.table::setnames(old = c("ERP", "low", "upp")) %>%
-    data.table::melt.data.table(
-      id.vars = "ERP",
-      measure.vars = c("low", "upp"),
-      variable.name = "bounds",
-      value.name = "time"
-    ) %>% 
-    
-    # Merge and label
-    .[order(time), !"bounds"] %>% 
-    data.table::merge.data.table(time_dat, all.y = T) %>% 
-    .[, "ERP" := zoo::na.locf(ERP)] 
 
-  return(ERP_dat)
+  # Collapse list
+  ERP_dat <- as.data.frame(do.call(rbind, ERP_list))
+
+  # Change names and make long format
+  data.table::setDT(ERP_dat, keep.rownames = T)
+  data.table::setnames(ERP_dat, old = c("ERP", "low", "upp"))
+
+  erp_long <- data.table::melt.data.table(
+    data = ERP_dat,
+    id.vars = "ERP",
+    measure.vars = c("low", "upp"),
+    variable.name = "bounds",
+    value.name = "time"
+  )
+
+  times_merged <- data.table::merge.data.table(erp_long, time_dat, all.y = T)
+  data.table::setorder(times_merged, "time")
+  times_merged[, ':=' (
+    "ERP" = zoo::na.locf(ERP),
+    "bounds" = NULL
+  )]
+
+  return(times_merged)
 }
 
 
@@ -166,75 +165,74 @@ ERP_to_times <- function(ERP_list, time_vec) {
 
 
 
-one_vhdr <- function(path, 
+one_vhdr <- function(path,
                      filename, # of single vhdr filr
                      var_labs,
                      sep,
                      ERP_list,
                      full_window_bounds) {
-  
+
   #' BVA_to_R function but for only one file
-  #' 
+  #'
   #' @param filename Vhdr filename, full path
   #' @inheritParams BVA_to_R
   #'
   #' @export
-                  
+
   # Extract vhdr info
   vhdr_info <- get_vhdr(filename, path)
-  
+
   # Read in voltage file and and datapoints cols
   voltages <- data.table::fread(
-    file = vhdr_info$filename_voltages,
-    sep = ";", 
+    file = vhdr_info[["filename_voltages"]],
+    sep = ";",
     header = T
-  ) %>% .[, "posit_datapoints" := seq(1, .N)]
-  
+  )
+
+  voltages[, "posit_datapoints" := seq(1, .N)]
+
   # Read markers file
-  markers <- BVAtoR::get_markers(vhdr_info$filename_markers)
-  
+  markers <- BVAtoR::get_markers(vhdr_info[["filename_markers"]])
+
   # Get meta data from filename - check first if double seps
   if (grepl(filename, pattern = paste(rep(sep, 2), collapse = ""))) {
     filename <- gsub(
       filename, pattern = paste(rep(sep, 2), collapse = ""), replacement = sep
     )
   }
-  
+
   metadat <- get_metadata(
     filename,
-    var_labs = var_labs, 
+    var_labs = var_labs,
     sep = sep
   )
-  
+
   # Make time vector
-  time_vec <- seq(
-    full_window_bounds[1], 
-    full_window_bounds[2], 
-    by = 1000 / vhdr_info$samp_freq
-  )
-  
+  time_vec <- seq(full_window_bounds[1], full_window_bounds[2], by = 1000 / vhdr_info[["samp_freq"]])
+
   # Make ERP data.table
   ERP_dat <- ERP_to_times(ERP_list, time_vec)
-  
+
   # Specify columns for indexing after
   cols <- c("descrip", "marker_num", "posit_onset")
-  
+
   # Bind everything
   merged_dat <- data.table::merge.data.table(
     x = voltages,
-    y = markers, 
+    y = markers,
     all.x = T
-  ) %>% 
-    data.table::setDT() %>% 
-    .[, (cols) := lapply(.SD, zoo::na.locf), .SDcols = cols] %>% 
-    .[, "time" := rep(time_vec, .N / length(time_vec))] %>% 
+  )
+
+  data.table::setDT(merged_dat)
+  merged_dat[, (cols) := lapply(.SD, zoo::na.locf), .SDcols = cols]
+  merged_dat[, "time" := rep(time_vec, .N / length(time_vec))]
     #.[, time_onset := time[which(posit_datapoints == posit_onset)][1]]
-    
-    # Add ERPs and sort
-    data.table::merge.data.table(y = ERP_dat, by = "time") %>% 
-    .[order(posit_datapoints)] %>% 
-    cbind(., metadat)
-  
-  return(merged_dat)
+
+  # Add ERPs and sort
+  merged_erp <- data.table::merge.data.table(x = merged_dat, y = ERP_dat, by = "time")
+  data.table::setorder(merged_erp, "posit_datapoints")
+
+
+  return(cbind(merged_erp, metadat))
 }
 

@@ -16,14 +16,12 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-
-library(magrittr)
 ```
 
 
 ```{r setup}
 library(BVAtoR)
-library(ggplot2)
+library(ggplot2) # plotting
 ```
 
 The BVAtoR package takes segmented output from BVA (.dat files, .vmrk files and .vhdr files) and transforms them into a single file with all voltage values, participants, conditions, and other variables specified by the experimenter for further single trial statistical analysis. This vignette describes the installation and use of the package in order to obtain a (large) dataframe containing EEG data from BVA output. 
@@ -117,39 +115,35 @@ path <- "../inst/extdata/"
 
 # Specify list of ERPs (example), ensure to cover entire window length and that they do not overlap
 ERPs <- list(
-"baseline" = c(-200, 48), # pre-stimulus
-"N100" = c(48, 198),
-"P200" = c(200, 348),
-"N400" = c(350, 498),
-"P600" = c(500, 898), # longer P600 window for late learners (example-specific)
-"PostP600" = c(900, 1198) # end of segment
+  "baseline" = c(-200, 48), # pre-stimulus
+  "N100" = c(48, 198),
+  "P200" = c(200, 348),
+  "N400" = c(350, 498),
+  "P600" = c(500, 898), # longer P600 window for late learners (example-specific)
+  "PostP600" = c(900, 1198) # end of segment
 )
 
 # Call main function and generate final datafile (obj)
-obj <- BVA_to_R(path = path, 
-                sep = "_", 
-                ERP_list = ERPs, 
-                var_labs = c(
-                  "Subject", "Comp", "Export_Node", 
-                  "Cognate_Status", "Congruency_Type", "Violation_Type"
-                ),
-                full_window_bounds = c(-200, 1198)) 
+obj <- BVA_to_R(
+  path = path, 
+  sep = "_", 
+  ERP_list = ERPs,
+  var_labs = c("Subject", "Comp", "Export_Node", 
+               "Cognate_Status", "Congruency_Type", "Violation_Type"),
+  full_window_bounds = c(-200, 1198)
+) 
 
-print(obj)
+head(obj)
 ```
 
 We can then use the dataframe for further manipulation/modelling/plotting:
 
 ```{r plot}
-obj %>% 
-  
-  # Plot Fp2 over time for both subjects - line for each marker
-  ggplot(aes(time, Fp2, col = marker_num)) +
+# Plot Fp2 over time for both subjects - line for each marker
+ggplot(data = obj, aes(time, Fp2, col = marker_num)) +
   geom_line(alpha = 0.5) +
-  
   # Add mean
-  stat_summary(aes(group = 1), fun = mean,
-               geom = "line", size = 2, col = "red") +
+  stat_summary(aes(group = 1), fun = mean, geom = "line", size = 2, col = "red") +
   facet_wrap(. ~ Subject) +
   geom_vline(xintercept = 0, linetype = "dashed") +
   theme_bw(base_size = 14) +
@@ -165,8 +159,9 @@ This function converts ERP List to dataframe with ERP components and time vector
 ```{r ERPsToTimes}
 times <- seq(-200, 1198)
 
-ERP_to_times(ERPs, times) %>% 
-  data.table::data.table()
+ERP_dat <- ERP_to_times(ERPs, times) 
+
+print(ERP_dat)
 ```
 
 ## `get_markers()`
@@ -174,8 +169,8 @@ ERP_to_times(ERPs, times) %>%
 Formats the vmrk files to extract information about markers:
 
 ```{r formatvmrk}
-get_markers("../inst/extdata/kons104_comp_BaselineCorrection_noncogn_incongr_nonviol.vmrk") %>% 
-  data.table::data.table()
+marker_info <- get_markers("../inst/extdata/kons104_comp_BaselineCorrection_noncogn_incongr_nonviol.vmrk")
+print(marker_info)
 ```
 
 ## `one_vhdr()`

@@ -25,6 +25,6 @@ The package will not be developed beyond the simple import functionality - only 
 
 | Name                                                         | Affiliation                           | Role         |
 | ------------------------------------------------------------ | ------------------------------------- | ------------ |
-| Edouard F. Bonneville                                        | Leiden University Medical Center (NL) | Maintainer   |
+| [Edouard F. Bonneville](https://www.lumc.nl/org/bds/medewerkers/1968807?setlanguage=English&setcountry=en) | Leiden University Medical Center (NL) | Maintainer   |
 | [Sarah von Grebmer](https://www.multilingualmind.eu/sarah-von-grebmer-zu-wolfsthurn?fbclid=IwAR3eL2IgqgbKIeGFRZtdNaLHDswC9iraLNxXDrVorQh92mK16iH5NJjLjwE) | Leiden University (NL)                | Collaborator |
 

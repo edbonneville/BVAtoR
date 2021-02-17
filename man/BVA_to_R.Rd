@@ -41,7 +41,7 @@ with eveyrthing summarised.
 path <- "path/to/file/"
 
 ERPs <- list(
-"baseline" = c(-200, -2), 
+"baseline" = c(-200, -2),
 "test_ERP" = c(0, 498),
 "ERP1" = c(500, 1198)
 )

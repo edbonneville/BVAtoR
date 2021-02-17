@@ -19,21 +19,20 @@
 #' @param full_window_bounds Bounds of time window is ms e.g. c(-200, 1198).
 #' @param filename_returned "filename.csv" if you want a .csv returned/
 #'
-#' @importFrom magrittr %>%
-#' @import data.table
-#'
 #' @return Formatted data.table
-#' 
+#'
+#' @importFrom data.table .N .I ':=' .SD
+#'
 #' @examples
 #' \dontrun{
 #' path <- "path/to/file/"
-#' 
+#'
 #' ERPs <- list(
-#' "baseline" = c(-200, -2), 
+#' "baseline" = c(-200, -2),
 #' "test_ERP" = c(0, 498),
 #' "ERP1" = c(500, 1198)
 #' )
-#' 
+#'
 #' obj <- BVA_to_R(
 #' path = path,
 #' sep = "_",
@@ -51,39 +50,39 @@ BVA_to_R <- function(path,
                      sep,
                      full_window_bounds,
                      filename_returned = NULL) {
-  
+
   # Set path if missing
-  if (missing(path)) path <- "" # assume all files are in current working 
-  
+  if (missing(path)) path <- "" # assume all files are in current working
+
   # List vhdr files in path
   vhdr_files <- list.files(
-    path = path, 
-    pattern = ".vhdr", 
+    path = path,
+    pattern = ".vhdr",
     full.names = T
   )
-  
+
   # Checks
   if (length(vhdr_files) == 0)
     stop("There are no vhdr files in the supplied path!")
-  
+
   ERP_vec <- unlist(ERP_list)
-  if (min(ERP_vec) != full_window_bounds[1] | 
+  if (min(ERP_vec) != full_window_bounds[1] |
       max(ERP_vec) != full_window_bounds[2])
     stop("Smallest/largest values of ERP bounds should = full_window_bounds")
-  
+
   # Apply vhdr processing
   list_processed_dats <- lapply(vhdr_files, function(vhdr_filename) {
-    
+
     BVAtoR::one_vhdr(
       path = path,
-      filename = vhdr_filename, 
+      filename = vhdr_filename,
       sep = sep,
       ERP_list = ERP_list,
       var_labs = var_labs,
       full_window_bounds = full_window_bounds
     )
   })
-  
+
   # Bind them together
   result_file <- data.table::rbindlist(list_processed_dats)
 
@@ -94,9 +93,9 @@ BVA_to_R <- function(path,
   } else {
 
     data.table::fwrite(
-      result_file, 
+      result_file,
       file = filename_returned,
-      sep = ",", 
+      sep = ",",
       row.names = F
     )
   }
