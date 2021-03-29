@@ -84,7 +84,7 @@ BVA_to_R <- function(path,
   })
 
   # Bind them together
-  result_file <- data.table::rbindlist(list_processed_dats)
+  result_file <- data.table::rbindlist(list_processed_dats, fill = TRUE)
 
   # Write .csv, or just return df
   if (is.null(filename_returned)) {
