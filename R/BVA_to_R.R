@@ -18,6 +18,8 @@
 #' parts separated by underscores e.g. c("subject", "condition").
 #' @param full_window_bounds Bounds of time window is ms e.g. c(-200, 1198).
 #' @param filename_returned "filename.csv" if you want a .csv returned/
+#' @param markers_exclude Character vector of (response) markers to exclude e.g.
+#' "S240" or if all >200 then paste0("S", 201:300)
 #'
 #' @return Formatted data.table
 #'
@@ -49,7 +51,8 @@ BVA_to_R <- function(path,
                      var_labs,
                      sep,
                      full_window_bounds,
-                     filename_returned = NULL) {
+                     filename_returned = NULL,
+                     markers_exclude = NULL) {
 
   # Set path if missing
   if (missing(path)) path <- "" # assume all files are in current working
@@ -79,7 +82,8 @@ BVA_to_R <- function(path,
       sep = sep,
       ERP_list = ERP_list,
       var_labs = var_labs,
-      full_window_bounds = full_window_bounds
+      full_window_bounds = full_window_bounds,
+      markers_exclude = markers_exclude
     )
   })
 

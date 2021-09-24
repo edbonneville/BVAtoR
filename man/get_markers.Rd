@@ -4,10 +4,13 @@
 \alias{get_markers}
 \title{Format .vmrk marker file.}
 \usage{
-get_markers(filename)
+get_markers(filename, markers_exclude = NULL)
 }
 \arguments{
 \item{filename}{Marker filename, full path.}
+
+\item{markers_exclude}{Character vector of (response) markers to exclude e.g.
+"S240" or if all >200 then paste0("S", 201:300)}
 }
 \value{
 Formatted marker dataframe.
