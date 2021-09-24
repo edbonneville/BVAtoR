@@ -61,13 +61,15 @@ get_metadata <- function(filename,
 }
 
 
-get_markers <- function(filename) {
+get_markers <- function(filename, markers_exclude = NULL) {
 
   #' Format .vmrk marker file.
   #'
   #' @description Format .vmrk marker file.
   #'
   #' @param filename Marker filename, full path.
+  #' @param markers_exclude Character vector of (response) markers to exclude e.g.
+  #' "S240" or if all >200 then paste0("S", 201:300)
   #'
   #' @return Formatted marker dataframe.
   #'
@@ -105,6 +107,12 @@ get_markers <- function(filename) {
   triggers_subset[, setdiff(names(triggers_subset), c("descrip", "posit_datapoints", "marker_num")) := NULL]
   triggers_subset[, "posit_datapoints" := as.numeric(posit_datapoints)]
   triggers_markers_S <- triggers_subset[grepl(pattern = "^S", x = descrip)]
+
+  # Also exclude any extra response markers
+  if (!is.null(markers_exclude)) {
+    triggers_markers_S <- triggers_markers_S[!(descrip %in% markers_exclude)]
+  }
+
   triggers_markers_S[, ':=' (
     "posit_onset" = posit_datapoints,
     "posit_datapoints" = 1 + posit_datapoints - posit_datapoints[1]
@@ -170,7 +178,8 @@ one_vhdr <- function(path,
                      var_labs,
                      sep,
                      ERP_list,
-                     full_window_bounds) {
+                     full_window_bounds,
+                     markers_exclude = NULL) {
 
   #' BVA_to_R function but for only one file
   #'
@@ -189,10 +198,13 @@ one_vhdr <- function(path,
     header = T
   )
 
-  voltages[, "posit_datapoints" := seq(1, .N)]
+  voltages[, "posit_datapoints" := seq_len(.N)]
 
   # Read markers file
-  markers <- BVAtoR::get_markers(vhdr_info[["filename_markers"]])
+  markers <- BVAtoR::get_markers(
+    filename = vhdr_info[["filename_markers"]],
+    markers_exclude = markers_exclude
+  )
 
   # Get meta data from filename - check first if double seps
   if (grepl(filename, pattern = paste(rep(sep, 2), collapse = ""))) {

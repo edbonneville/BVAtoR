@@ -4,7 +4,15 @@
 \alias{one_vhdr}
 \title{BVA_to_R function but for only one file}
 \usage{
-one_vhdr(path, filename, var_labs, sep, ERP_list, full_window_bounds)
+one_vhdr(
+  path,
+  filename,
+  var_labs,
+  sep,
+  ERP_list,
+  full_window_bounds,
+  markers_exclude = NULL
+)
 }
 \arguments{
 \item{path}{Full path to all .vhdr, .vmrk and .dat files.
@@ -21,6 +29,9 @@ parts separated by underscores e.g. c("subject", "condition").}
 \item{ERP_list}{Named list of ERP components and their lower/upper bounds.}
 
 \item{full_window_bounds}{Bounds of time window is ms e.g. c(-200, 1198).}
+
+\item{markers_exclude}{Character vector of (response) markers to exclude e.g.
+"S240" or if all >200 then paste0("S", 201:300)}
 }
 \description{
 BVA_to_R function but for only one file

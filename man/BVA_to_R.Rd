@@ -10,7 +10,8 @@ BVA_to_R(
   var_labs,
   sep,
   full_window_bounds,
-  filename_returned = NULL
+  filename_returned = NULL,
+  markers_exclude = NULL
 )
 }
 \arguments{
@@ -28,6 +29,9 @@ parts separated by underscores e.g. c("subject", "condition").}
 \item{full_window_bounds}{Bounds of time window is ms e.g. c(-200, 1198).}
 
 \item{filename_returned}{"filename.csv" if you want a .csv returned/}
+
+\item{markers_exclude}{Character vector of (response) markers to exclude e.g.
+"S240" or if all >200 then paste0("S", 201:300)}
 }
 \value{
 Formatted data.table
