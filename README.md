@@ -11,12 +11,12 @@ Minimal package to import electroencephalography (EEG) data from Brain Vision An
 To install the package, run:
 
 ```r
-devtools::install_github("edbonneville/BVAtoR", dependencies = T)
+devtools::install_github("edbonneville/BVAtoR", dependencies = TRUE)
 ```
 
 ## Additional functionality
 
-The package will not be developed beyond the simple import functionality - only bugs/compatibility issues will be treated. If you need extra functionality beyond data import (e.g. plotting), we highly recommend looking at the following R packages, which are both still under active development:
+This package is no longer maintained/has been archived. If you need extra functionality beyond data import (e.g. plotting), we highly recommend looking at the following R packages, which are both still under active development:
 
 * [eegUtils](https://github.com/craddm/eegUtils) by [Matt Craddock](https://www.mattcraddock.com/)
 * [eeguana](https://github.com/bnicenboim/eeguana/) by [Bruno Nicenboim](https://bnicenboim.github.io/)
